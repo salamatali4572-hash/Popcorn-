@@ -355,15 +355,6 @@
             background: var(--primary-dark);
         }
         
-        .three-dot-menu {
-            font-size: 24px;
-            cursor: pointer;
-            color: var(--text-primary);
-            padding: 5px;
-            transition: color 0.3s;
-            display: none;
-        }
-        
         #pageTitle {
             font-size: 16px;
             color: var(--secondary);
@@ -1604,11 +1595,6 @@
                 display: none;
             }
             
-            .three-dot-menu {
-                display: block;
-                color: var(--primary);
-            }
-            
             .menu-toggle {
                 display: none;
             }
@@ -1685,12 +1671,6 @@
             .menu-toggle {
                 align-self: center;
                 margin-bottom: 0;
-            }
-            
-            .three-dot-menu {
-                display: block;
-                order: 4;
-                color: var(--primary);
             }
             
             .user-info div:last-child > div:first-child {
@@ -2445,14 +2425,14 @@
                             <div class="form-row branding-form-row">
                                 <div class="form-group">
                                     <label for="schoolName"><i class="fas fa-school"></i> School/Academy Name</label>
-                                    <input type="text" id="schoolName" class="form-control" placeholder="Enter your school or academy name">
+                                    <input type="text" id="schoolName" class="form-control" placeholder="Enter your school or academy name" disabled>
                                 </div>
                                 <div class="form-group">
                                     <label for="schoolPhone"><i class="fas fa-phone"></i> Academy Phone Number</label>
-                                    <input type="tel" id="schoolPhone" class="form-control" placeholder="03XX-XXXXXXX">
+                                    <input type="tel" id="schoolPhone" class="form-control" placeholder="03XX-XXXXXXX" disabled>
                                 </div>
                             </div>
-                            <button type="submit" class="btn btn-success"><i class="fas fa-save"></i> Save Branding</button>
+                            <button type="submit" class="btn btn-success" disabled><i class="fas fa-save"></i> Save Branding</button>
                             <div id="saveStatus" class="save-status"></div>
                         </form>
                     </div>
@@ -2611,12 +2591,15 @@
         let currentMessagesRef = null;
 
         // EMS state
-        let students = [];
-        let fees = [];
-        let attendance = [];
+        let students = {};
+        let fees = {};
+        let attendance = {};
         let currentAction = null;
         let currentItemId = null;
-        let calcExpression = '';
+
+        // Default branding (locked)
+        const defaultSchoolName = "Powered by Ali ® 2025 03091539086";
+        const defaultSchoolPhone = "03091539086";
 
         // Sidebar Elements
         const sidebar = document.getElementById('sidebar');
@@ -2633,19 +2616,20 @@
                     };
                     
                     // Load user data from DB
-                    db.ref('users/' + currentUser.uid).once('value').then((snap) => {
+                    db.ref('users/' + currentUser.uid).once('value').then(async (snap) => {
                         if (snap.exists()) {
                             const data = snap.val();
                             currentUser.username = data.username;
                             currentUser.fullName = data.fullName;
                             currentUser.phone = data.phone;
-                            currentUser.schoolName = data.schoolName || '';
-                            currentUser.schoolPhone = data.schoolPhone || '';
+                            currentUser.schoolName = data.schoolName || defaultSchoolName;
+                            currentUser.schoolPhone = data.schoolPhone || defaultSchoolPhone;
                             currentUser.bio = data.bio || '';
                             currentUser.avatar = data.avatar || currentUser.fullName.charAt(0).toUpperCase();
                             currentUser.createdAt = data.createdAt;
                             currentUser.pin = data.pin;
                         }
+                        await checkAndGenerateKeys();
                         loadUserData();
                         showApp();
                     });
@@ -2723,9 +2707,6 @@
             // Story creation
             document.getElementById('storyForm').addEventListener('submit', handleCreateStory);
             
-            // Branding form
-            document.getElementById('brandingForm').addEventListener('submit', handleBrandingSave);
-            
             // EMS event listeners
             if (document.getElementById('studentForm')) document.getElementById('studentForm').addEventListener('submit', handleAddStudent);
             if (document.getElementById('feeForm')) document.getElementById('feeForm').addEventListener('submit', handleFeeCollection);
@@ -2775,7 +2756,7 @@
                 });
         }
 
-        function handleRegister(e) {
+        async function handleRegister(e) {
             e.preventDefault();
             const username = document.getElementById('registerUsername').value;
             const fullName = document.getElementById('registerFullName').value;
@@ -2803,8 +2784,10 @@
                     } else {
                         // Create user with email and password
                         auth.createUserWithEmailAndPassword(email, password)
-                            .then((userCredential) => {
+                            .then(async (userCredential) => {
                                 const user = userCredential.user;
+                                
+                                const { publicKey, privateKey } = await generateKeyPair();
                                 
                                 // Store user data in Firebase
                                 db.ref('users/' + user.uid).set({
@@ -2817,8 +2800,13 @@
                                     avatar: fullName.charAt(0).toUpperCase(),
                                     createdAt: firebase.database.ServerValue.TIMESTAMP,
                                     lastSeen: firebase.database.ServerValue.TIMESTAMP,
-                                    pin
+                                    pin,
+                                    brandingUnlocked: false,
+                                    schoolName: defaultSchoolName,
+                                    schoolPhone: defaultSchoolPhone,
+                                    publicKey
                                 }).then(() => {
+                                    localStorage.setItem('privateKey', JSON.stringify(privateKey));
                                     showAuthMessage('Registration successful! You can now login with your credentials.', 'success');
                                     switchAuthTab('login');
                                     document.getElementById('registerForm').reset();
@@ -2851,7 +2839,6 @@
             // Update last seen timestamp
             if (currentUser) {
                 db.ref('users/' + currentUser.uid + '/lastSeen').set(firebase.database.ServerValue.TIMESTAMP);
-                saveUserData();
             }
             
             auth.signOut().then(() => {
@@ -2877,54 +2864,44 @@
             });
         }
 
-        // Utility function for EMS data
-        function getUserDataKey(keyName) {
-            if (!currentUser || !currentUser.uid) return null;
-            return `${keyName}_${currentUser.uid}`;
-        }
-
-        // Load user-specific EMS data
-        function loadUserData() {
-            if (!currentUser) return;
-            
-            const studentKey = getUserDataKey('students');
-            const feesKey = getUserDataKey('fees');
-            const attendanceKey = getUserDataKey('attendance');
-            
-            students = JSON.parse(localStorage.getItem(studentKey)) || [];
-            fees = JSON.parse(localStorage.getItem(feesKey)) || [];
-            attendance = JSON.parse(localStorage.getItem(attendanceKey)) || [];
-            
-            updateDashboard();
-            updateStudentDropdown();
-            loadStudentsTable();
-            loadFeesTable();
-            loadAttendanceTable();
-            updateBrandingPreview();
-        }
-
-        // Save user-specific EMS data
-        function saveUserData() {
-            if (!currentUser) return;
-            
-            const studentKey = getUserDataKey('students');
-            const feesKey = getUserDataKey('fees');
-            const attendanceKey = getUserDataKey('attendance');
-            
-            localStorage.setItem(studentKey, JSON.stringify(students));
-            localStorage.setItem(feesKey, JSON.stringify(fees));
-            localStorage.setItem(attendanceKey, JSON.stringify(attendance));
-        }
-
         // Clear EMS data on logout
         function clearUserData() {
-            students = [];
-            fees = [];
-            attendance = [];
+            students = {};
+            fees = {};
+            attendance = {};
             currentUser = null;
             if (currentMessagesRef) {
                 currentMessagesRef.off();
             }
+        }
+
+        // Load user-specific EMS data from Firebase
+        function loadUserData() {
+            if (!currentUser) return;
+
+            // Load students
+            db.ref(`ems/${currentUser.uid}/students`).on('value', (snap) => {
+                students = snap.val() || {};
+                updateDashboard();
+                updateStudentDropdown();
+                loadStudentsTable();
+            });
+
+            // Load fees
+            db.ref(`ems/${currentUser.uid}/fees`).on('value', (snap) => {
+                fees = snap.val() || {};
+                loadFeesTable();
+                updateDashboard();
+            });
+
+            // Load attendance
+            db.ref(`ems/${currentUser.uid}/attendance`).on('value', (snap) => {
+                attendance = snap.val() || {};
+                loadAttendanceTable();
+                updateDashboard();
+            });
+
+            updateBrandingPreview();
         }
 
         // UI Navigation functions
@@ -2941,7 +2918,7 @@
             // Update profile section
             updateProfileSection();
             
-            // Load branding form
+            // Update branding form (locked, show default)
             document.getElementById('schoolName').value = currentUser.schoolName;
             document.getElementById('schoolPhone').value = currentUser.schoolPhone;
             
@@ -2995,7 +2972,9 @@
             };
             document.getElementById('pageTitle').textContent = titles[section] || section;
             
-            if (section === 'dashboard') {
+            if(section === 'branding') {
+                loadBrandingSection();
+            } else if (section === 'dashboard') {
                 loadNewsFeed();
                 loadStories();
             } else if (section === 'profile') {
@@ -3042,41 +3021,7 @@
             });
         }
 
-        // Branding Management
-        function handleBrandingSave(e) {
-            e.preventDefault();
-            
-            const schoolName = document.getElementById('schoolName').value.trim();
-            const schoolPhone = document.getElementById('schoolPhone').value.trim();
-            
-            if (schoolPhone && !schoolPhone.match(/^03\d{9}$/)) {
-                alert('Please enter a valid Pakistani phone number (03XXXXXXXXX)');
-                return;
-            }
-            
-            db.ref('users/' + currentUser.uid).update({
-                schoolName,
-                schoolPhone
-            }).then(() => {
-                // Update local user data
-                currentUser.schoolName = schoolName;
-                currentUser.schoolPhone = schoolPhone;
-                
-                // Show success
-                const saveStatus = document.getElementById('saveStatus');
-                saveStatus.textContent = 'Branding saved successfully!';
-                saveStatus.className = 'save-status success';
-                setTimeout(() => {
-                    saveStatus.style.display = 'none';
-                }, 3000);
-                
-                updateBrandingPreview();
-                alert('Branding updated! It will now appear in WhatsApp receipts and alerts.');
-            }).catch((error) => {
-                alert('Error saving branding: ' + error.message);
-            });
-        }
-
+        // Branding Management (locked)
         function updateBrandingPreview() {
             const preview = document.getElementById('brandingPreview');
             const branding = currentUser.schoolName ? `${currentUser.schoolName}\n` : '';
@@ -3090,6 +3035,76 @@ Date: 2025-10-12
 
 ${branding}${contact}Thank you! - Created by Sample User`;
         }
+
+function loadBrandingSection() {
+    document.getElementById('schoolName').value = currentUser.schoolName;
+    document.getElementById('schoolPhone').value = currentUser.schoolPhone;
+    updateBrandingPreview();
+
+    const form = document.getElementById('brandingForm');
+    const button = form.querySelector('button');
+    const inputs = form.querySelectorAll('input');
+    const container = document.querySelector('.branding-container .form-container');
+
+    // Remove existing message if any
+    let existingMsg = container.querySelector('.unlock-message');
+    if (existingMsg) existingMsg.remove();
+
+    if (currentUser.brandingUnlocked) {
+        inputs.forEach(inp => inp.disabled = false);
+        button.disabled = false;
+        if (!form.hasListener) {
+            form.addEventListener('submit', handleSaveBranding);
+            form.hasListener = true;
+        }
+    } else {
+        inputs.forEach(inp => inp.disabled = true);
+        button.disabled = true;
+
+        const unlockMessage = document.createElement('div');
+        unlockMessage.className = 'unlock-message';
+        unlockMessage.style.marginTop = '20px';
+        unlockMessage.innerHTML = `
+            <p style="color: var(--warning); text-align: center;">Custom branding is a paid feature.</p>
+            <p style="text-align: center;">To unlock, contact Ali for payment.</p>
+            <button class="btn btn-whatsapp" style="display: block; margin: 10px auto;" onclick="contactAdmin()">Contact on WhatsApp</button>
+        `;
+        container.appendChild(unlockMessage);
+    }
+}
+
+function handleSaveBranding(e) {
+    e.preventDefault();
+    const schoolName = document.getElementById('schoolName').value;
+    const schoolPhone = document.getElementById('schoolPhone').value;
+
+    db.ref('users/' + currentUser.uid).update({
+        schoolName,
+        schoolPhone
+    }).then(() => {
+        currentUser.schoolName = schoolName;
+        currentUser.schoolPhone = schoolPhone;
+        updateBrandingPreview();
+        showSaveStatus('Branding saved successfully!');
+    });
+}
+
+function showSaveStatus(msg) {
+    const status = document.getElementById('saveStatus');
+    status.textContent = msg;
+    status.classList.add('success');
+    status.style.display = 'block';
+    setTimeout(() => {
+        status.style.display = 'none';
+        status.classList.remove('success');
+    }, 3000);
+}
+
+function contactAdmin() {
+    const adminPhone = '03091539086';
+    const message = 'Hello Ali, I want to unlock custom branding for Popcorn app.';
+    openWhatsApp(adminPhone, message);
+}
 
         // Profile Management
         function updateProfileSection() {
@@ -4095,7 +4110,7 @@ ${branding}${contact}Thank you! - Created by Sample User`;
             element.addEventListener('mouseleave', () => clearTimeout(pressTimer));
         }
 
-        function selectChat(contact) {
+        async function selectChat(contact) {
             currentChatUser = contact;
             
             const chatWindow = document.getElementById('chatWindow');
@@ -4129,15 +4144,37 @@ ${branding}${contact}Thank you! - Created by Sample User`;
             const chatMessages = document.getElementById('chatMessages');
             chatMessages.innerHTML = '';
             
-            currentMessagesRef.orderByChild('timestamp').on('child_added', (snap) => {
+            currentChatUser.publicKey = users[contact.uid].publicKey;
+            currentChatUser.sharedKey = await deriveSharedSecret(currentUser.privateKey, currentChatUser.publicKey);
+            
+            currentMessagesRef.orderByChild('timestamp').on('child_added', async (snap) => {
                 const msg = snap.val();
                 const isSent = msg.sender === currentUser.uid;
                 const time = new Date(msg.timestamp).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
                 
+                let messageText;
+                if (msg.text) {
+                  messageText = msg.text; // Backward compatibility for old messages
+                } else if (msg.encrypted && msg.iv) {
+                  const encrypted = base64ToArrayBuffer(msg.encrypted);
+                  const iv = base64ToArrayBuffer(msg.iv);
+                  const decrypted = await crypto.subtle.decrypt(
+                    {
+                      name: "AES-GCM",
+                      iv: iv,
+                    },
+                    currentChatUser.sharedKey,
+                    encrypted
+                  );
+                  messageText = new TextDecoder().decode(decrypted);
+                } else {
+                  messageText = '[Message could not be decrypted]';
+                }
+                
                 const messageElement = document.createElement('div');
                 messageElement.className = `message ${isSent ? 'sent' : 'received'}`;
                 messageElement.innerHTML = `
-                    <div class="message-bubble">${msg.text}${isSent ? ` <button onclick="deleteMessage('${snap.key}', '${chatId}')"><i class="fas fa-trash" style="font-size: 10px; color: #fff;"></i></button>` : ''}</div>
+                    <div class="message-bubble">${messageText}${isSent ? ` <button onclick="deleteMessage('${snap.key}', '${chatId}')"><i class="fas fa-trash" style="font-size: 10px; color: #fff;"></i></button>` : ''}</div>
                     <span class="message-time">${time}</span>
                 `;
                 
@@ -4158,16 +4195,31 @@ ${branding}${contact}Thank you! - Created by Sample User`;
             });
         }
 
-        function sendMessage() {
+        async function sendMessage() {
             const input = document.getElementById('chatInput');
             const text = input.value.trim();
             
             if (!text) return;
             
+            const iv = crypto.getRandomValues(new Uint8Array(12));
+            const encodedText = new TextEncoder().encode(text);
+            const encrypted = await crypto.subtle.encrypt(
+              {
+                name: "AES-GCM",
+                iv: iv,
+              },
+              currentChatUser.sharedKey,
+              encodedText
+            );
+            
+            const encryptedBase64 = arrayBufferToBase64(encrypted);
+            const ivBase64 = arrayBufferToBase64(iv);
+            
             currentMessagesRef.push({
-                text,
-                sender: currentUser.uid,
-                timestamp: firebase.database.ServerValue.TIMESTAMP
+              encrypted: encryptedBase64,
+              iv: ivBase64,
+              sender: currentUser.uid,
+              timestamp: firebase.database.ServerValue.TIMESTAMP
             });
             
             input.value = '';
@@ -4242,18 +4294,17 @@ ${branding}${contact}Thank you! - Created by Sample User`;
                 return;
             }
             
+            const id = generateId();
             const newStudent = {
-                id: generateId(),
                 name,
                 grade: parseInt(grade),
                 phone,
                 fee: parseInt(fee),
                 admissionDate: new Date().toISOString().split('T')[0],
-                createdBy: currentUser.username || currentUser.email
+                admissionBy: currentUser.username || currentUser.email
             };
             
-            students.push(newStudent);
-            saveUserData();
+            db.ref(`ems/${currentUser.uid}/students/${id}`).set(newStudent);
             
             const branding = currentUser.schoolName ? `${currentUser.schoolName}\nContact: ${currentUser.schoolPhone || currentUser.phone}\n` : '';
             const message = `Assalam-o-Alaikum! ${name} has been admitted to Grade ${grade}. Monthly fee: PKR ${fee}. \n${branding}Created by ${currentUser.fullName} (${currentUser.phone})`;
@@ -4261,9 +4312,6 @@ ${branding}${contact}Thank you! - Created by Sample User`;
             
             alert('Student added successfully! WhatsApp message ready to send.');
             document.getElementById('studentForm').reset();
-            loadStudentsTable();
-            updateStudentDropdown();
-            updateDashboard();
         }
 
         function loadStudentsTable() {
@@ -4272,12 +4320,14 @@ ${branding}${contact}Thank you! - Created by Sample User`;
             const tbody = document.querySelector('#studentsTable tbody');
             tbody.innerHTML = '';
 
-            const sortedStudents = [...students].sort((a, b) => a.grade - b.grade || a.name.localeCompare(b.name));
+            const studentArray = Object.entries(students).map(([id, student]) => ({id, ...student}));
+
+            const sortedStudents = studentArray.sort((a, b) => a.grade - b.grade || a.name.localeCompare(b.name));
             
             sortedStudents.forEach(student => {
                 // Calculate fee status for this month
                 const currentMonth = new Date().toISOString().slice(0, 7);
-                const studentFees = fees.filter(f => f.studentId === student.id && f.month === currentMonth);
+                const studentFees = Object.values(fees).filter(f => f.studentId === student.id && f.month === currentMonth);
                 const totalPaid = studentFees.reduce((sum, fee) => sum + fee.amount, 0);
                 const remaining = student.fee - totalPaid;
                 
@@ -4322,7 +4372,8 @@ ${branding}${contact}Thank you! - Created by Sample User`;
             const dropdown = document.getElementById('feeStudent');
             dropdown.innerHTML = '<option value="">Select Student</option>';
             
-            students.forEach(student => {
+            const studentArray = Object.entries(students).map(([id, student]) => ({id, ...student}));
+            studentArray.forEach(student => {
                 const option = document.createElement('option');
                 option.value = student.id;
                 option.textContent = `${student.name} (Grade ${student.grade}) - PKR ${student.fee}/month`;
@@ -4350,11 +4401,11 @@ ${branding}${contact}Thank you! - Created by Sample User`;
                 return;
             }
             
-            const student = students.find(s => s.id === studentId);
+            const student = students[studentId];
             if (!student) return;
             
             // Calculate already paid amount for this month
-            const paidFees = fees.filter(f => f.studentId === studentId && f.month === month);
+            const paidFees = Object.values(fees).filter(f => f.studentId === studentId && f.month === month);
             const totalPaid = paidFees.reduce((sum, fee) => sum + fee.amount, 0);
             const remaining = student.fee - totalPaid;
             
@@ -4365,7 +4416,7 @@ ${branding}${contact}Thank you! - Created by Sample User`;
             // Set max value for fee amount input to the remaining fee
             feeAmountInput.max = remaining < 0 ? 0 : remaining;
             
-            // Set default value for amount input (suggest full remaining amount)
+            // Set set default value for amount input (suggest full remaining amount)
             if (remaining > 0) {
                  feeAmountInput.value = remaining;
             } else {
@@ -4382,14 +4433,14 @@ ${branding}${contact}Thank you! - Created by Sample User`;
             const amount = parseInt(document.getElementById('feeAmount').value);
             const datePaid = document.getElementById('feeDate').value;
             
-            const student = students.find(s => s.id === studentId);
+            const student = students[studentId];
             if (!student) {
                 alert('Please select a valid student');
                 return;
             }
             
             // Recalculate remaining fee before processing
-            const paidFees = fees.filter(f => f.studentId === studentId && f.month === month);
+            const paidFees = Object.values(fees).filter(f => f.studentId === studentId && f.month === month);
             const totalPaid = paidFees.reduce((sum, fee) => sum + fee.amount, 0);
             const remaining = student.fee - totalPaid;
             
@@ -4403,8 +4454,8 @@ ${branding}${contact}Thank you! - Created by Sample User`;
                 return;
             }
             
+            const id = generateId();
             const newFee = {
-                id: generateId(),
                 studentId,
                 studentName: student.name,
                 month,
@@ -4413,8 +4464,7 @@ ${branding}${contact}Thank you! - Created by Sample User`;
                 collectedBy: currentUser.username || currentUser.email
             };
             
-            fees.push(newFee);
-            saveUserData();
+            db.ref(`ems/${currentUser.uid}/fees/${id}`).set(newFee);
             
             // WhatsApp message content
             const totalPaidNow = totalPaid + amount;
@@ -4429,9 +4479,6 @@ ${branding}${contact}Thank you! - Created by Sample User`;
             document.getElementById('feeForm').reset();
             document.getElementById('feeMonth').valueAsDate = new Date();
             document.getElementById('feeDate').value = new Date().toISOString().split('T')[0];
-            loadFeesTable();
-            loadStudentsTable();
-            updateDashboard();
             updateFeeInfo();
         }
 
@@ -4441,10 +4488,11 @@ ${branding}${contact}Thank you! - Created by Sample User`;
             const tbody = document.querySelector('#feesTable tbody');
             tbody.innerHTML = '';
             
-            const sortedFees = [...fees].sort((a, b) => new Date(b.datePaid) - new Date(a.datePaid));
+            const feeArray = Object.entries(fees).map(([id, fee]) => ({id, ...fee}));
+            const sortedFees = feeArray.sort((a, b) => new Date(b.datePaid) - new Date(a.datePaid));
             
             sortedFees.forEach(fee => {
-                const student = students.find(s => s.id === fee.studentId);
+                const student = students[fee.studentId];
                 if (!student) {
                     const rowDeleted = document.createElement('tr');
                     rowDeleted.innerHTML = `
@@ -4463,7 +4511,7 @@ ${branding}${contact}Thank you! - Created by Sample User`;
                 }
                 
                 const totalMonthlyFee = student.fee;
-                const paidFees = fees.filter(f => f.studentId === fee.studentId && f.month === fee.month);
+                const paidFees = Object.values(fees).filter(f => f.studentId === fee.studentId && f.month === fee.month);
                 const totalPaidForMonth = paidFees.reduce((sum, f) => sum + f.amount, 0);
                 const remaining = totalMonthlyFee - totalPaidForMonth;
                 
@@ -4497,10 +4545,10 @@ ${branding}${contact}Thank you! - Created by Sample User`;
             
             const recentFees = sortedFees.slice(0, 5);
             recentFees.forEach(fee => {
-                const student = students.find(s => s.id === fee.studentId);
+                const student = students[fee.studentId];
                 if (!student) return;
                 
-                const paidFees = fees.filter(f => f.studentId === fee.studentId && f.month === fee.month);
+                const paidFees = Object.values(fees).filter(f => f.studentId === fee.studentId && f.month === fee.month);
                 const totalPaid = paidFees.reduce((sum, f) => sum + f.amount, 0);
                 const remaining = student.fee - totalPaid;
 
@@ -4520,15 +4568,15 @@ ${branding}${contact}Thank you! - Created by Sample User`;
         function resendReceipt(feeId) {
             if (!validateUserSession()) return;
             
-            const fee = fees.find(f => f.id === feeId);
-            const student = students.find(s => s.id === fee.studentId);
+            const fee = fees[feeId];
+            const student = students[fee.studentId];
             
             if (!student) {
                 alert("Student record not found. Cannot resend.");
                 return;
             }
 
-            const paidFees = fees.filter(f => f.studentId === fee.studentId && f.month === fee.month);
+            const paidFees = Object.values(fees).filter(f => f.studentId === fee.studentId && f.month === fee.month);
             const totalPaid = paidFees.reduce((sum, f) => sum + f.amount, 0);
             const remaining = student.fee - totalPaid;
             const status = remaining <= 0 ? 'Fully Paid' : `Partially Paid (PKR ${remaining} due)`;
@@ -4552,7 +4600,7 @@ ${branding}${contact}Thank you! - Created by Sample User`;
         function toggleAttendance(studentId, isChecked) {
             if (!validateUserSession()) return;
             
-            const student = students.find(s => s.id === studentId);
+            const student = students[studentId];
             if (!student) return;
 
             const date = document.getElementById('attendanceDate').value;
@@ -4577,19 +4625,21 @@ ${branding}${contact}Thank you! - Created by Sample User`;
             const container = document.getElementById('attendanceList');
             container.innerHTML = '';
             
-            if (students.length === 0) {
+            const studentArray = Object.entries(students).map(([id, student]) => ({id, ...student}));
+            if (studentArray.length === 0) {
                 container.innerHTML = '<p style="text-align: center; padding: 20px; color: var(--text-secondary);">No students available. Please add students first.</p>';
                 return;
             }
             
             const date = document.getElementById('attendanceDate').value;
-            const existingRecord = attendance.find(a => a.date === date);
+            const existingRecord = attendance[date] || {present: [], absent: []};
 
             // Group students by grade
-            const studentsByGrade = students.reduce((acc, student) => {
+            const studentsByGrade = studentArray.reduce((acc, student) => {
                 const grade = student.grade;
                 if (!acc[grade]) acc[grade] = [];
                 acc[grade].push(student);
+                acc[grade];
                 return acc;
             }, {});
             
@@ -4606,7 +4656,7 @@ ${branding}${contact}Thank you! - Created by Sample User`;
 
                 studentsByGrade[grade].forEach(student => {
                     // Determine initial status: checked if present in existing record, or default to present (true)
-                    const isPresent = existingRecord ? existingRecord.present.includes(student.id) : true;
+                    const isPresent = existingRecord.present.includes(student.id);
                     
                     const div = document.createElement('div');
                     div.style.display = 'flex';
@@ -4667,13 +4717,11 @@ ${branding}${contact}Thank you! - Created by Sample User`;
             
             const date = document.getElementById('attendanceDate').value;
             
-            // Remove existing attendance before adding new one
-            attendance = attendance.filter(a => a.date !== date);
-            
             const presentStudents = [];
             const absentStudents = [];
             
-            students.forEach(student => {
+            const studentArray = Object.entries(students).map(([id, student]) => ({id, ...student}));
+            studentArray.forEach(student => {
                 // Read state from the hidden checkbox
                 const checkbox = document.getElementById(`attendance-${student.id}`);
                 if (checkbox && checkbox.checked) {
@@ -4683,34 +4731,29 @@ ${branding}${contact}Thank you! - Created by Sample User`;
                 }
             });
             
-            if (students.length === 0) {
+            if (studentArray.length === 0) {
                  alert('No students to mark attendance for.');
                  return;
             }
 
             const newAttendance = {
-                id: generateId(),
-                date,
                 present: presentStudents,
                 absent: absentStudents,
                 markedBy: currentUser.username || currentUser.email
             };
             
-            attendance.push(newAttendance);
-            saveUserData();
+            db.ref(`ems/${currentUser.uid}/attendance/${date}`).set(newAttendance);
             
             alert('Attendance saved successfully! Absent student alerts were sent via WhatsApp upon marking.');
             
-            // Reload form to reflect newly saved data/reset the state
+            // Reload form to reflect reflect the changes
             loadAttendanceForm(); 
-            loadAttendanceTable();
-            updateDashboard();
         }
 
-        function resendAbsentAlerts(attendanceId) {
+        function resendAbsentAlerts(attendanceDate) {
             if (!validateUserSession()) return;
             
-            const record = attendance.find(a => a.id === attendanceId);
+            const record = attendance[attendanceDate];
             
             if (!record) {
                 alert("Attendance record not found.");
@@ -4718,10 +4761,10 @@ ${branding}${contact}Thank you! - Created by Sample User`;
             }
             
             record.absent.forEach(studentId => {
-                const student = students.find(s => s.id === studentId);
+                const student = students[studentId];
                 if (student) {
                     const branding = currentUser.schoolName ? `${currentUser.schoolName}\nContact: ${currentUser.schoolPhone || currentUser.phone}\n` : '';
-                    const message = `Attendance Alert: ${student.name} was absent on ${record.date}. Please contact the academy for more info. \n${branding}Created by ${currentUser.fullName} (${currentUser.phone})`;
+                    const message = `Attendance Alert: ${student.name} was absent on ${attendanceDate}. Please contact the academy for more info. \n${branding}Created by ${currentUser.fullName} (${currentUser.phone})`;
                     openWhatsApp(student.phone, message);
                 }
             });
@@ -4729,11 +4772,11 @@ ${branding}${contact}Thank you! - Created by Sample User`;
             alert('WhatsApp alerts ready to send for absent students!');
         }
 
-        function deleteAttendance(id) {
+        function deleteAttendance(date) {
             if (!validateUserSession()) return;
             
             currentAction = 'deleteAttendance';
-            currentItemId = id;
+            currentItemId = date;
             openPinModal();
         }
         
@@ -4743,10 +4786,11 @@ ${branding}${contact}Thank you! - Created by Sample User`;
             const tbody = document.querySelector('#attendanceTable tbody');
             tbody.innerHTML = '';
             
-            const sortedAttendance = [...attendance].sort((a, b) => new Date(b.date) - new Date(a.date));
+            const attendanceArray = Object.entries(attendance).map(([date, record]) => ({date, ...record}));
+            const sortedAttendance = attendanceArray.sort((a, b) => new Date(b.date) - new Date(a.date));
             
             sortedAttendance.forEach(record => {
-                const totalStudentsOnDate = students.length > 0 ? students.length : (record.present.length + record.absent.length);
+                const totalStudentsOnDate = Object.keys(students).length > 0 ? Object.keys(students).length : (record.present.length + record.absent.length);
                 const percentage = totalStudentsOnDate > 0 ? Math.round((record.present.length / totalStudentsOnDate) * 100) : 0;
                 
                 const row = document.createElement('tr');
@@ -4756,8 +4800,8 @@ ${branding}${contact}Thank you! - Created by Sample User`;
                     <td><span class="status-badge status-absent">${record.absent.length}</span></td>
                     <td>${percentage}%</td>
                     <td class="action-buttons">
-                        <button class="btn btn-whatsapp btn-sm" onclick="resendAbsentAlerts('${record.id}')"><i class="fab fa-whatsapp"></i> Resend Alerts</button>
-                        <button class="btn btn-danger btn-sm" onclick="deleteAttendance('${record.id}')"><i class="fas fa-trash"></i> Delete</button>
+                        <button class="btn btn-whatsapp btn-sm" onclick="resendAbsentAlerts('${record.date}')"><i class="fab fa-whatsapp"></i> Resend Alerts</button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteAttendance('${record.date}')"><i class="fas fa-trash"></i> Delete</button>
                     </td>
                 `;
                 tbody.appendChild(row);
@@ -4834,30 +4878,19 @@ ${branding}${contact}Thank you! - Created by Sample User`;
             switch(currentAction) {
                 case 'deleteStudent':
                     if (confirm('Are you sure you want to PERMANENTLY delete this student? Fee and attendance history will remain but be marked as archived.')) {
-                        students = students.filter(s => s.id !== currentItemId);
-                        saveUserData();
-                        loadStudentsTable();
-                        updateStudentDropdown();
-                        updateDashboard();
+                        db.ref(`ems/${currentUser.uid}/students/${currentItemId}`).remove();
                         alert('Student deleted successfully');
                     }
                     break;
                 case 'deleteFee':
                     if (confirm('Are you sure you want to PERMANENTLY delete this fee receipt?')) {
-                        fees = fees.filter(f => f.id !== currentItemId);
-                        saveUserData();
-                        loadFeesTable();
-                        loadStudentsTable();
-                        updateDashboard();
+                        db.ref(`ems/${currentUser.uid}/fees/${currentItemId}`).remove();
                         alert('Fee record deleted successfully');
                     }
                     break;
                 case 'deleteAttendance':
                     if (confirm('Are you sure you want to PERMANENTLY delete this attendance record?')) {
-                        attendance = attendance.filter(a => a.id !== currentItemId);
-                        saveUserData();
-                        loadAttendanceTable();
-                        updateDashboard();
+                        db.ref(`ems/${currentUser.uid}/attendance/${currentItemId}`).remove();
                         alert('Attendance record deleted successfully');
                     }
                     break;
@@ -4870,18 +4903,18 @@ ${branding}${contact}Thank you! - Created by Sample User`;
         function updateDashboard() {
             if (!validateUserSession()) return;
             
-            document.getElementById('totalStudents').textContent = students.length;
+            document.getElementById('totalStudents').textContent = Object.keys(students).length;
             
             const currentMonth = new Date().toISOString().slice(0, 7);
-            const monthlyFees = fees.filter(f => f.month === currentMonth)
+            const monthlyFees = Object.values(fees).filter(f => f.month === currentMonth)
                                    .reduce((sum, fee) => sum + fee.amount, 0);
             document.getElementById('feesCollected').textContent = monthlyFees;
             
             const today = new Date().toISOString().split('T')[0];
-            const todayRecord = attendance.find(a => a.date === today);
+            const todayRecord = attendance[today];
             
             if (todayRecord) {
-                const totalRegisteredStudents = students.length; 
+                const totalRegisteredStudents = Object.keys(students).length; 
                 let percentage = 0;
                 if (totalRegisteredStudents > 0) {
                      percentage = Math.round((todayRecord.present.length / totalRegisteredStudents) * 100);
@@ -4892,8 +4925,8 @@ ${branding}${contact}Thank you! - Created by Sample User`;
             }
             
             let pendingCount = 0;
-            students.forEach(student => {
-                const studentFees = fees.filter(f => f.studentId === student.id && f.month === currentMonth);
+            Object.values(students).forEach(student => {
+                const studentFees = Object.values(fees).filter(f => f.studentId === student.id && f.month === currentMonth);
                 const totalPaid = studentFees.reduce((sum, fee) => sum + fee.amount, 0);
                 if (totalPaid < student.fee) {
                     pendingCount++;
@@ -4905,6 +4938,91 @@ ${branding}${contact}Thank you! - Created by Sample User`;
         // Utility functions
         function generateId() {
             return Math.random().toString(36).substr(2, 9).toUpperCase();
+        }
+
+        // E2EE Crypto Functions
+        async function generateKeyPair() {
+          const keyPair = await crypto.subtle.generateKey(
+            {
+              name: "ECDH",
+              namedCurve: "P-384",
+            },
+            true,
+            ["deriveKey", "deriveBits"]
+          );
+          const publicKey = await crypto.subtle.exportKey("jwk", keyPair.publicKey);
+          const privateKey = await crypto.subtle.exportKey("jwk", keyPair.privateKey);
+          return { publicKey, privateKey };
+        }
+
+        async function checkAndGenerateKeys() {
+          let privateKey = localStorage.getItem('privateKey');
+          if (!privateKey) {
+            const { publicKey, privateKey: newPrivate } = await generateKeyPair();
+            await db.ref('users/' + currentUser.uid + '/publicKey').set(publicKey);
+            localStorage.setItem('privateKey', JSON.stringify(newPrivate));
+            privateKey = JSON.stringify(newPrivate);
+          }
+          currentUser.privateKey = JSON.parse(privateKey);
+        }
+
+        async function deriveSharedSecret(privateKeyJwk, publicKeyJwk) {
+          const privateKey = await crypto.subtle.importKey(
+            "jwk",
+            privateKeyJwk,
+            { name: "ECDH", namedCurve: "P-384" },
+            true,
+            ["deriveKey", "deriveBits"]
+          );
+          const publicKey = await crypto.subtle.importKey(
+            "jwk",
+            publicKeyJwk,
+            { name: "ECDH", namedCurve: "P-384" },
+            true,
+            []
+          );
+          const sharedSecret = await crypto.subtle.deriveBits(
+            {
+              name: "ECDH",
+              public: publicKey,
+            },
+            privateKey,
+            384
+          );
+          // Derive AES key from shared secret using HKDF
+          const aesKey = await crypto.subtle.importKey(
+            "raw",
+            sharedSecret,
+            { name: "HKDF" },
+            false,
+            ["deriveKey"]
+          ).then(imported => crypto.subtle.deriveKey(
+            {
+              name: "HKDF",
+              salt: new Uint8Array(0),
+              info: new Uint8Array(0),
+              hash: "SHA-256",
+            },
+            imported,
+            { name: "AES-GCM", length: 256 },
+            true,
+            ["encrypt", "decrypt"]
+          ));
+          return aesKey;
+        }
+
+        function arrayBufferToBase64(buffer) {
+          return btoa(String.fromCharCode(...new Uint8Array(buffer)));
+        }
+
+        function base64ToArrayBuffer(base64) {
+          const binary = atob(base64);
+          const len = binary.length;
+          const bytes = new Uint8Array(len);
+          for (let i = 0; i < len; i++) {
+            bytes[i] = binary.charCodeAt(i);
+          }
+          return bytes.buffer;
         }
     </script>
 </body>
