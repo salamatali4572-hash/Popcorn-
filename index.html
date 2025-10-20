@@ -3115,7 +3115,7 @@
                     };
                     
                     // Load user data from DB
-                    db.ref('users/' + currentUser.uid).on('value', async (snap) => {
+                    db.ref('users/' + currentUser.uid).on('value', (snap) => {
                         if (snap.exists()) {
                             const data = snap.val();
                             currentUser.username = data.username;
@@ -3135,7 +3135,6 @@
                                 alert('Logged out: Session active on another device.');
                                 return;
                             }
-                            await checkAndGenerateKeys();
                             loadUserData();
                             showApp();
                         }
@@ -3266,7 +3265,7 @@
                 });
         }
 
-        async function handleRegister(e) {
+        function handleRegister(e) {
             e.preventDefault();
             const username = document.getElementById('registerUsername').value;
             const fullName = document.getElementById('registerFullName').value;
@@ -3294,10 +3293,8 @@
                     } else {
                         // Create user with email and password
                         auth.createUserWithEmailAndPassword(email, password)
-                            .then(async (userCredential) => {
+                            .then((userCredential) => {
                                 const user = userCredential.user;
-                                
-                                const { publicKey, privateKey } = await generateKeyPair();
                                 
                                 // Store user data in Firebase
                                 db.ref('users/' + user.uid).set({
@@ -3313,13 +3310,11 @@
                                     pin,
                                     brandingUnlocked: false,
                                     schoolName: defaultSchoolName,
-                                    schoolPhone: defaultSchoolPhone,
-                                    publicKey
+                                    schoolPhone: defaultSchoolPhone
                                 }).then(() => {
                                     const sessionToken = generateId();
                                     db.ref('users/' + user.uid + '/sessionToken').set(sessionToken);
                                     localStorage.setItem('sessionToken', sessionToken);
-                                    localStorage.setItem('privateKey', JSON.stringify(privateKey));
                                     showAuthMessage('Registration successful! Loading dashboard...', 'success');
                                     document.getElementById('registerForm').reset();
                                 }).catch((dbError) => {
@@ -4673,7 +4668,7 @@ ${branding}${contact}Thank you! - Created by Sample User`;
             element.addEventListener('mouseleave', () => clearTimeout(pressTimer));
         }
 
-        async function selectChat(contact) {
+        function selectChat(contact) {
             currentChatUser = contact;
             
             const chatWindow = document.getElementById('chatWindow');
@@ -4708,31 +4703,12 @@ ${branding}${contact}Thank you! - Created by Sample User`;
             const chatMessages = document.getElementById('chatMessages');
             chatMessages.innerHTML = '';
             
-            currentChatUser.publicKey = users[contact.uid].publicKey;
-            currentChatUser.sharedKey = await deriveSharedSecret(currentUser.privateKey, currentChatUser.publicKey);
-            currentMessagesRef.orderByChild('timestamp').limitToLast(50).on('child_added', async (child) => {
+            currentMessagesRef.orderByChild('timestamp').limitToLast(50).on('child_added', (child) => {
                 const msg = child.val();
                 const isSent = msg.sender === currentUser.uid;
                 const time = new Date(msg.timestamp).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
                 
-                let messageText;
-                if (msg.text) {
-                  messageText = msg.text; // Backward compatibility for old messages
-                } else if (msg.encrypted && msg.iv) {
-                  const encrypted = base64ToArrayBuffer(msg.encrypted);
-                  const iv = base64ToArrayBuffer(msg.iv);
-                  const decrypted = await crypto.subtle.decrypt(
-                    {
-                      name: "AES-GCM",
-                      iv: iv,
-                    },
-                    currentChatUser.sharedKey,
-                    encrypted
-                  );
-                  messageText = new TextDecoder().decode(decrypted);
-                } else {
-                  messageText = '[Message could not be decrypted]';
-                }
+                let messageText = msg.text;
                 
                 const messageElement = document.createElement('div');
                 messageElement.className = `message ${isSent ? 'sent' : 'received'}`;
@@ -4758,29 +4734,14 @@ ${branding}${contact}Thank you! - Created by Sample User`;
             });
         }
 
-        async function sendMessage() {
+        function sendMessage() {
             const input = document.getElementById('chatInput');
             const text = input.value.trim();
             
             if (!text) return;
             
-            const iv = crypto.getRandomValues(new Uint8Array(12));
-            const encodedText = new TextEncoder().encode(text);
-            const encrypted = await crypto.subtle.encrypt(
-              {
-                name: "AES-GCM",
-                iv: iv,
-              },
-              currentChatUser.sharedKey,
-              encodedText
-            );
-            
-            const encryptedBase64 = arrayBufferToBase64(encrypted);
-            const ivBase64 = arrayBufferToBase64(iv);
-            
             currentMessagesRef.push({
-              encrypted: encryptedBase64,
-              iv: ivBase64,
+              text: text,
               sender: currentUser.uid,
               timestamp: firebase.database.ServerValue.TIMESTAMP
             });
@@ -5468,91 +5429,6 @@ ${branding}${contact}Thank you! - Created by Sample User`;
         // Utility functions
         function generateId() {
             return Math.random().toString(36).substr(2, 9).toUpperCase();
-        }
-
-        // E2EE Crypto Functions
-        async function generateKeyPair() {
-          const keyPair = await crypto.subtle.generateKey(
-            {
-              name: "ECDH",
-              namedCurve: "P-384",
-            },
-            true,
-            ["deriveKey", "deriveBits"]
-          );
-          const publicKey = await crypto.subtle.exportKey("jwk", keyPair.publicKey);
-          const privateKey = await crypto.subtle.exportKey("jwk", keyPair.privateKey);
-          return { publicKey, privateKey };
-        }
-
-        async function checkAndGenerateKeys() {
-          let privateKey = localStorage.getItem('privateKey');
-          if (!privateKey) {
-            const { publicKey, privateKey: newPrivate } = await generateKeyPair();
-            await db.ref('users/' + currentUser.uid + '/publicKey').set(publicKey);
-            localStorage.setItem('privateKey', JSON.stringify(newPrivate));
-            privateKey = JSON.stringify(newPrivate);
-          }
-          currentUser.privateKey = JSON.parse(privateKey);
-        }
-
-        async function deriveSharedSecret(privateKeyJwk, publicKeyJwk) {
-          const privateKey = await crypto.subtle.importKey(
-            "jwk",
-            privateKeyJwk,
-            { name: "ECDH", namedCurve: "P-384" },
-            true,
-            ["deriveKey", "deriveBits"]
-          );
-          const publicKey = await crypto.subtle.importKey(
-            "jwk",
-            publicKeyJwk,
-            { name: "ECDH", namedCurve: "P-384" },
-            true,
-            []
-          );
-          const sharedSecret = await crypto.subtle.deriveBits(
-            {
-              name: "ECDH",
-              public: publicKey,
-            },
-            privateKey,
-            384
-          );
-          // Derive AES key from shared secret using HKDF
-          const aesKey = await crypto.subtle.importKey(
-            "raw",
-            sharedSecret,
-            { name: "HKDF" },
-            false,
-            ["deriveKey"]
-          ).then(imported => crypto.subtle.deriveKey(
-            {
-              name: "HKDF",
-              salt: new Uint8Array(0),
-              info: new Uint8Array(0),
-              hash: "SHA-256",
-            },
-            imported,
-            { name: "AES-GCM", length: 256 },
-            true,
-            ["encrypt", "decrypt"]
-          ));
-          return aesKey;
-        }
-
-        function arrayBufferToBase64(buffer) {
-          return btoa(String.fromCharCode(...new Uint8Array(buffer)));
-        }
-
-        function base64ToArrayBuffer(base64) {
-          const binary = atob(base64);
-          const len = binary.length;
-          const bytes = new Uint8Array(len);
-          for (let i = 0; i < len; i++) {
-            bytes[i] = binary.charCodeAt(i);
-          }
-          return bytes.buffer;
         }
     </script>
 </body>
