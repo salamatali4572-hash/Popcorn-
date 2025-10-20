@@ -2686,7 +2686,7 @@
 </div>
 <div class="form-row">
 <div class="table-container shadow-md">
-<h3>Recent Fee Collections</h3>
+<h3>Recent Fee collections</h3>
 <div class="table-responsive">
 <table id="recentFeesTable">
 <thead>
@@ -2956,6 +2956,8 @@
 </div>
 </div>
 </div>
+</div>
+</div>
 <!-- Share Menu -->
 <div class="share-menu" id="shareMenu">
 <ul>
@@ -3113,7 +3115,7 @@
                     };
                     
                     // Load user data from DB
-                    db.ref('users/' + currentUser.uid).once('value').then(async (snap) => {
+                    db.ref('users/' + currentUser.uid).on('value', async (snap) => {
                         if (snap.exists()) {
                             const data = snap.val();
                             currentUser.username = data.username;
@@ -3133,10 +3135,10 @@
                                 alert('Logged out: Session active on another device.');
                                 return;
                             }
+                            await checkAndGenerateKeys();
+                            loadUserData();
+                            showApp();
                         }
-                        await checkAndGenerateKeys();
-                        loadUserData();
-                        showApp();
                     });
                 } else {
                     currentUser = null;
@@ -3314,9 +3316,11 @@
                                     schoolPhone: defaultSchoolPhone,
                                     publicKey
                                 }).then(() => {
+                                    const sessionToken = generateId();
+                                    db.ref('users/' + user.uid + '/sessionToken').set(sessionToken);
+                                    localStorage.setItem('sessionToken', sessionToken);
                                     localStorage.setItem('privateKey', JSON.stringify(privateKey));
-                                    showAuthMessage('Registration successful! You can now login with your credentials.', 'success');
-                                    switchAuthTab('login');
+                                    showAuthMessage('Registration successful! Loading dashboard...', 'success');
                                     document.getElementById('registerForm').reset();
                                 }).catch((dbError) => {
                                     showAuthMessage('Error saving user data: ' + dbError.message, 'error');
@@ -5459,43 +5463,6 @@ ${branding}${contact}Thank you! - Created by Sample User`;
                 default:
                     alert('Action not defined for PIN protection.');
             }
-        }
-
-        // EMS Dashboard Update
-        function updateDashboard() {
-            if (!validateUserSession()) return;
-            
-            document.getElementById('totalStudents').textContent = Object.keys(students).length;
-            
-            const currentMonth = new Date().toISOString().slice(0, 7);
-            const monthlyFees = Object.values(fees).filter(f => f.month === currentMonth)
-                                   .reduce((sum, fee) => sum + fee.amount, 0);
-            document.getElementById('feesCollected').textContent = monthlyFees;
-            
-            const today = new Date().toISOString().split('T')[0];
-            const todayRecord = attendance[today];
-            
-            if (todayRecord) {
-                const totalRegisteredStudents = Object.keys(students).length; 
-                let percentage = 0;
-                if (totalRegisteredStudents > 0) {
-                     percentage = Math.round((todayRecord.present.length / totalRegisteredStudents) * 100);
-                }
-                document.getElementById('todayAttendance').textContent = `${percentage}%`;
-                document.getElementById('todayAttendance').parentElement.querySelector('.card-value').style.color = percentage >= 80 ? 'var(--success)' : percentage >= 50 ? 'var(--warning)' : 'var(--danger)';
-            } else {
-                document.getElementById('todayAttendance').textContent = 'Not taken';
-            }
-            
-            let pendingCount = 0;
-            Object.values(students).forEach(student => {
-                const studentFees = Object.values(fees).filter(f => f.studentId === student.id && f.month === currentMonth);
-                const totalPaid = studentFees.reduce((sum, fee) => sum + fee.amount, 0);
-                if (totalPaid < student.fee) {
-                    pendingCount++;
-                }
-            });
-            document.getElementById('pendingFees').textContent = pendingCount;
         }
 
         // Utility functions
