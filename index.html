@@ -1,18 +1,17 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Popcorn - Complete Social Media Platform with EMS</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-storage-compat.js"></script>
-    
-    <style>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Popcorn - Complete Social Media Platform with EMS</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-storage-compat.js"></script>
+<style>
         * {
             margin: 0;
             padding: 0;
@@ -1819,627 +1818,576 @@
                 flex-direction: column;
             }
         }
+        
     </style>
 </head>
 <body>
-    <div id="authSection" class="auth-container">
-        <div class="auth-form shadow-md">
-            <div class="auth-header">
-                <h1><i class="fas fa-users"></i> Popcorn</h1>
-                <p>Complete Social Media Platform</p>
-            </div>
-            
-            <div class="auth-tabs">
-                <div class="auth-tab active" id="loginTab">Login</div>
-                <div class="auth-tab" id="registerTab">Register</div>
-            </div>
-            
-            <form id="loginForm">
-                <div class="form-group">
-                    <label for="loginEmail"><i class="fas fa-envelope"></i> Email</label>
-                    <input type="email" id="loginEmail" class="form-control" placeholder="Enter your email" required>
-                </div>
-                <div class="form-group">
-                    <label for="loginPassword"><i class="fas fa-lock"></i> Password</label>
-                    <input type="password" id="loginPassword" class="form-control" placeholder="Enter your password" required>
-                </div>
-                <button type="submit" class="btn">Login to Popcorn</button>
-            </form>
-            
-            <form id="registerForm" style="display: none;">
-                <div class="form-group">
-                    <label for="registerUsername"><i class="fas fa-user"></i> Username</label>
-                    <input type="text" id="registerUsername" class="form-control" placeholder="Choose a username" required>
-                </div>
-                <div class="form-group">
-                    <label for="registerFullName"><i class="fas fa-id-card"></i> Full Name</label>
-                    <input type="text" id="registerFullName" class="form-control" placeholder="Enter your full name" required>
-                </div>
-                <div class="form-group">
-                    <label for="registerPhone"><i class="fas fa-phone"></i> Phone Number</label>
-                    <input type="tel" id="registerPhone" class="form-control" placeholder="03XX-XXXXXXX" required>
-                </div>
-                <div class="form-group">
-                    <label for="registerEmail"><i class="fas fa-envelope"></i> Email</label>
-                    <input type="email" id="registerEmail" class="form-control" placeholder="Enter your email" required>
-                </div>
-                <div class="form-group">
-                    <label for="registerPassword"><i class="fas fa-lock"></i> Password</label>
-                    <input type="password" id="registerPassword" class="form-control" placeholder="Create a password" required>
-                </div>
-                <div class="form-group">
-                    <label for="registerPIN"><i class="fas fa-key"></i> Security PIN</label>
-                    <input type="password" id="registerPIN" class="form-control" placeholder="4-digit PIN for security" maxlength="4" required>
-                </div>
-                <div class="form-group">
-                    <label for="registerBio"><i class="fas fa-pen"></i> Bio</label>
-                    <textarea id="registerBio" class="form-control" placeholder="Tell us about yourself" rows="3"></textarea>
-                </div>
-                <button type="submit" class="btn btn-success">Create Account</button>
-            </form>
-            
-            <div id="authMessage" style="margin-top: 20px;"></div>
-
-            <div class="disclaimer-box">
-                <p><strong>⚠️ Data Storage Disclaimer:</strong></p>
-                <p><strong>English:</strong> This social media application uses Firebase Realtime Database for all data (users, posts, messages, stories). Your data is stored securely in the cloud.</p>
-                <p><strong>اردو:</strong> یہ سوشل میڈیا ایپلیکیشن تمام ڈیٹا (صارفین، پوسٹس، میسجز، سٹوریز) کے لیے Firebase Realtime Database استعمال کرتی ہے۔ آپ کا ڈیٹا کلاؤڈ میں محفوظ طریقے سے محفوظ ہوتا ہے۔</p>
-            </div>
-        </div>
-    </div>
-
-    <div id="appSection" class="app-container">
-        <div class="sidebar" id="sidebar">
-            <div class="sidebar-header">
-                <div class="logo-title">
-                    <i class="fas fa-users fa-2x"></i>
-                    <h2>Popcorn</h2>
-                </div>
-                <button class="sidebar-close-btn" id="sidebarCloseBtn" aria-label="Close menu">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
-            <ul class="sidebar-menu">
-                <li class="active" data-section="dashboard">
-                    <i class="fas fa-home"></i> News Feed
+<div class="auth-container" id="authSection">
+<div class="auth-form shadow-md">
+<div class="auth-header">
+<h1><i class="fas fa-users"></i> Popcorn</h1>
+<p>Complete Social Media Platform</p>
+</div>
+<div class="auth-tabs">
+<div class="auth-tab active" id="loginTab">Login</div>
+<div class="auth-tab" id="registerTab">Register</div>
+</div>
+<form id="loginForm">
+<div class="form-group">
+<label for="loginEmail"><i class="fas fa-envelope"></i> Email</label>
+<input class="form-control" id="loginEmail" placeholder="Enter your email" required="" type="email"/>
+</div>
+<div class="form-group">
+<label for="loginPassword"><i class="fas fa-lock"></i> Password</label>
+<input class="form-control" id="loginPassword" placeholder="Enter your password" required="" type="password"/>
+</div>
+<button class="btn" type="submit">Login to Popcorn</button>
+</form>
+<form id="registerForm" style="display: none;">
+<div class="form-group">
+<label for="registerUsername"><i class="fas fa-user"></i> Username</label>
+<input class="form-control" id="registerUsername" placeholder="Choose a username" required="" type="text"/>
+</div>
+<div class="form-group">
+<label for="registerFullName"><i class="fas fa-id-card"></i> Full Name</label>
+<input class="form-control" id="registerFullName" placeholder="Enter your full name" required="" type="text"/>
+</div>
+<div class="form-group">
+<label for="registerPhone"><i class="fas fa-phone"></i> Phone Number</label>
+<input class="form-control" id="registerPhone" placeholder="03XX-XXXXXXX" required="" type="tel"/>
+</div>
+<div class="form-group">
+<label for="registerEmail"><i class="fas fa-envelope"></i> Email</label>
+<input class="form-control" id="registerEmail" placeholder="Enter your email" required="" type="email"/>
+</div>
+<div class="form-group">
+<label for="registerPassword"><i class="fas fa-lock"></i> Password</label>
+<input class="form-control" id="registerPassword" placeholder="Create a password" required="" type="password"/>
+</div>
+<div class="form-group">
+<label for="registerPIN"><i class="fas fa-key"></i> Security PIN</label>
+<input class="form-control" id="registerPIN" maxlength="4" placeholder="4-digit PIN for security" required="" type="password"/>
+</div>
+<div class="form-group">
+<label for="registerBio"><i class="fas fa-pen"></i> Bio</label>
+<textarea class="form-control" id="registerBio" placeholder="Tell us about yourself" rows="3"></textarea>
+</div>
+<button class="btn btn-success" type="submit">Create Account</button>
+</form>
+<div id="authMessage" style="margin-top: 20px;"></div>
+<div class="disclaimer-box">
+<p><strong>⚠️ Data Storage Disclaimer:</strong></p>
+<p><strong>English:</strong> This social media application uses Firebase Realtime Database for all data (users, posts, messages, stories). Your data is stored securely in the cloud.</p>
+<p><strong>اردو:</strong> یہ سوشل میڈیا ایپلیکیشن تمام ڈیٹا (صارفین، پوسٹس، میسجز، سٹوریز) کے لیے Firebase Realtime Database استعمال کرتی ہے۔ آپ کا ڈیٹا کلاؤڈ میں محفوظ طریقے سے محفوظ ہوتا ہے۔</p>
+</div>
+</div>
+</div>
+<div class="app-container" id="appSection">
+<div class="sidebar" id="sidebar">
+<div class="sidebar-header">
+<div class="logo-title">
+<i class="fas fa-users fa-2x"></i>
+<h2>Popcorn</h2>
+</div>
+<button aria-label="Close menu" class="sidebar-close-btn" id="sidebarCloseBtn">
+<i class="fas fa-times"></i>
+</button>
+</div>
+<ul class="sidebar-menu">
+<li class="active" data-section="dashboard">
+<i class="fas fa-home"></i> News Feed
                 </li>
-                <li data-section="profile">
-                    <i class="fas fa-user"></i> My Profile
+<li data-section="profile">
+<i class="fas fa-user"></i> My Profile
                 </li>
-                <li data-section="friends">
-                    <i class="fas fa-user-friends"></i> Friends
+<li data-section="friends">
+<i class="fas fa-user-friends"></i> Friends
                 </li>
-                <li data-section="messages">
-                    <i class="fas fa-comments"></i> Messages
+<li data-section="messages">
+<i class="fas fa-comment-dots"></i> Messages
+</li>
+<li data-section="stories">
+<i class="fas fa-history"></i> Stories
                 </li>
-                <li data-section="stories">
-                    <i class="fas fa-history"></i> Stories
+<li data-section="notifications">
+<i class="fas fa-bell"></i> Notifications
                 </li>
-                <li data-section="notifications">
-                    <i class="fas fa-bell"></i> Notifications
+<li data-section="search">
+<i class="fas fa-search"></i> Search
                 </li>
-                <li data-section="search">
-                    <i class="fas fa-search"></i> Search
+<li data-section="emsDashboard">
+<i class="fas fa-tachometer-alt"></i> EMS Dashboard
                 </li>
-                <li data-section="emsDashboard">
-                    <i class="fas fa-tachometer-alt"></i> EMS Dashboard
+<li data-section="students">
+<i class="fas fa-user-graduate"></i> Student Admission
                 </li>
-                <li data-section="students">
-                    <i class="fas fa-user-graduate"></i> Student Admission
+<li data-section="fees">
+<i class="fas fa-money-bill-wave"></i> Fee Collection
                 </li>
-                <li data-section="fees">
-                    <i class="fas fa-money-bill-wave"></i> Fee Collection
+<li data-section="attendance">
+<i class="fas fa-calendar-check"></i> Attendance
                 </li>
-                <li data-section="attendance">
-                    <i class="fas fa-calendar-check"></i> Attendance
+<li data-section="settings">
+<i class="fas fa-cog"></i> Settings
                 </li>
-                <li data-section="settings">
-                    <i class="fas fa-cog"></i> Settings
+<li data-section="branding">
+<i class="fas fa-building"></i> Academy Branding
                 </li>
-                <li data-section="branding">
-                    <i class="fas fa-building"></i> Academy Branding
-                </li>
-            </ul>
-        </div>
-        
-        <div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+</ul>
+</div>
+<div class="sidebar-backdrop" id="sidebarBackdrop"></div>
+<div class="main-content" id="mainContent">
+<div class="header shadow-md">
+<div class="header-left-group">
+<button class="menu-toggle" id="menuToggle">
+<i class="fas fa-bars"></i>
+</button>
+</div>
+<h1 id="pageTitle">News Feed</h1>
+<div class="user-info">
+<div class="user-avatar" id="userAvatar">U</div>
+<div>
+<div>Welcome, <strong id="loggedInUser">User</strong></div>
+<button class="btn btn-danger btn-sm" id="logoutBtn">Logout</button>
+</div>
+</div>
+</div>
+<div class="content-section active" id="dashboardSection">
+<div class="section-header">
+<h2>News Feed</h2>
+<p>Latest updates from your friends</p>
+</div>
+<div class="stories-container" id="storiesFeed">
+<div class="story-item">
+<div class="story-avatar story-add">
+<i class="fas fa-plus"></i>
+</div>
+<div class="story-username">Your Story</div>
+</div>
+</div>
+<div class="posts-container" id="postsFeed">
+<div class="loading">Loading posts...</div>
+</div>
+</div>
+<div class="content-section" id="profileSection">
+<div class="section-header">
+<h2>My Profile</h2>
+<p>Manage your profile and settings</p>
+</div>
+<div class="profile-container">
+<div class="profile-header">
+<div class="profile-avatar" id="profileAvatar">U</div>
+<div class="profile-info">
+<h1 class="profile-name" id="profileName">User Name</h1>
+<p class="profile-bio" id="profileBio">This is my bio</p>
+<div class="profile-stats">
+<div class="profile-stat">
+<div class="stat-value" id="profilePosts">0</div>
+<div class="stat-label">Posts</div>
+</div>
+<div class="profile-stat">
+<div class="stat-value" id="profileFriends">0</div>
+<div class="stat-label">Friends</div>
+</div>
+<div class="profile-stat">
+<div class="stat-value" id="profileFollowers">0</div>
+<div class="stat-label">Followers</div>
+</div>
+</div>
+</div>
+<div class="profile-actions">
+<button class="btn" id="editProfileBtn">Edit Profile</button>
+<button class="btn btn-success" id="createPostBtn">Create Post</button>
+</div>
+</div>
+<div class="posts-container" id="profilePostsContainer">
+<div class="loading">Loading your posts...</div>
+</div>
+</div>
+</div>
+<div class="content-section" id="friendsSection">
+<div class="section-header">
+<h2>Friends</h2>
+<p>Manage your friends and connections</p>
+</div>
+<div class="search-container">
+<div class="search-bar">
+<input class="search-input" id="friendSearch" placeholder="Search for friends..." type="text"/>
+<button class="btn" id="searchFriendBtn">Search</button>
+</div>
+</div>
+<div class="friends-container" id="friendsList">
+<div class="loading">Loading friends...</div>
+</div>
+<div class="section-header" style="margin-top: 40px;">
+<h3>Friend Requests</h3>
+</div>
+<div class="friends-container" id="friendRequestsList">
+<div class="loading">Loading friend requests...</div>
+</div>
+</div>
 
-        <div class="main-content" id="mainContent">
-            <div class="header shadow-md">
-                <div class="header-left-group">
-                    <button class="menu-toggle" id="menuToggle">
-                        <i class="fas fa-bars"></i>
-                    </button>
-                </div>
-
-                <h1 id="pageTitle">News Feed</h1>
-
-                <div class="user-info">
-                    <div class="user-avatar" id="userAvatar">U</div>
-                    <div>
-                        <div>Welcome, <strong id="loggedInUser">User</strong></div>
-                        <button id="logoutBtn" class="btn btn-danger btn-sm">Logout</button>
-                    </div>
-                </div>
-            </div>
-
-            <div id="dashboardSection" class="content-section active">
-                <div class="section-header">
-                    <h2>News Feed</h2>
-                    <p>Latest updates from your friends</p>
-                </div>
-                
-                <div class="stories-container" id="storiesFeed">
-                    <div class="story-item">
-                        <div class="story-avatar story-add">
-                            <i class="fas fa-plus"></i>
-                        </div>
-                        <div class="story-username">Your Story</div>
-                    </div>
-                </div>
-                
-                <div class="posts-container" id="postsFeed">
-                    <div class="loading">Loading posts...</div>
-                </div>
-            </div>
-
-            <div id="profileSection" class="content-section">
-                <div class="section-header">
-                    <h2>My Profile</h2>
-                    <p>Manage your profile and settings</p>
-                </div>
-                
-                <div class="profile-container">
-                    <div class="profile-header">
-                        <div class="profile-avatar" id="profileAvatar">U</div>
-                        <div class="profile-info">
-                            <h1 class="profile-name" id="profileName">User Name</h1>
-                            <p class="profile-bio" id="profileBio">This is my bio</p>
-                            <div class="profile-stats">
-                                <div class="profile-stat">
-                                    <div class="stat-value" id="profilePosts">0</div>
-                                    <div class="stat-label">Posts</div>
-                                </div>
-                                <div class="profile-stat">
-                                    <div class="stat-value" id="profileFriends">0</div>
-                                    <div class="stat-label">Friends</div>
-                                </div>
-                                <div class="profile-stat">
-                                    <div class="stat-value" id="profileFollowers">0</div>
-                                    <div class="stat-label">Followers</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="profile-actions">
-                            <button class="btn" id="editProfileBtn">Edit Profile</button>
-                            <button class="btn btn-success" id="createPostBtn">Create Post</button>
-                        </div>
-                    </div>
-                    
-                    <div class="posts-container" id="profilePostsContainer">
-                        <div class="loading">Loading your posts...</div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="friendsSection" class="content-section">
-                <div class="section-header">
-                    <h2>Friends</h2>
-                    <p>Manage your friends and connections</p>
-                </div>
-                
-                <div class="search-container">
-                    <div class="search-bar">
-                        <input type="text" class="search-input" id="friendSearch" placeholder="Search for friends...">
-                        <button class="btn" id="searchFriendBtn">Search</button>
-                    </div>
-                </div>
-                
-                <div class="friends-container" id="friendsList">
-                    <div class="loading">Loading friends...</div>
-                </div>
-                
-                <div class="section-header" style="margin-top: 40px;">
-                    <h3>Friend Requests</h3>
-                </div>
-                
-                <div class="friends-container" id="friendRequestsList">
-                    <div class="loading">Loading friend requests...</div>
-                </div>
-            </div>
-
-            <div id="messagesSection" class="content-section">
-                <div class="section-header">
-                    <h2>Messages</h2>
-                    <p>Chat with your friends in real-time</p>
-                </div>
-                <div class="messaging-container shadow-md">
-                    <div class="contacts-list" id="contactsList">
-                        <div class="loading">Loading contacts...</div>
-                    </div>
-                    <div class="chat-window" id="chatWindow">
-                        <div class="no-chat-selected">
-                            <i class="fas fa-comment-dots" style="font-size: 48px; color: var(--text-secondary); margin-bottom: 10px;"></i>
-                            <p>Select a friend to start chatting.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="storiesSection" class="content-section">
-                <div class="section-header">
-                    <h2>Stories</h2>
-                    <p>Share moments that disappear after 24 hours</p>
-                </div>
-                
-                <div class="stories-container" id="storiesList">
-                    <div class="story-item">
-                        <div class="story-avatar story-add">
-                            <i class="fas fa-plus"></i>
-                        </div>
-                        <div class="story-username">Your Story</div>
-                    </div>
-                </div>
-                
-                <div class="form-container shadow-md">
-                    <h3>Create New Story</h3>
-                    <form id="storyForm">
-                        <div class="form-group">
-                            <label for="storyText">Story Text</label>
-                            <textarea id="storyText" class="form-control" placeholder="What's happening?" rows="3"></textarea>
-                        </div>
-                        <button type="submit" class="btn">Add to Story</button>
-                    </form>
-                </div>
-            </div>
-
-            <div id="notificationsSection" class="content-section">
-                <div class="section-header">
-                    <h2>Notifications</h2>
-                    <p>Your recent activity and updates</p>
-                </div>
-                
-                <div class="notifications-container" id="notificationsList">
-                    <div class="loading">Loading notifications...</div>
-                </div>
-            </div>
-
-            <div id="searchSection" class="content-section">
-                <div class="section-header">
-                    <h2>Search</h2>
-                    <p>Find people and content</p>
-                </div>
-                
-                <div class="search-container">
-                    <div class="search-bar">
-                        <input type="text" class="search-input" id="globalSearch" placeholder="Search for people, posts, or hashtags...">
-                        <button class="btn" id="globalSearchBtn">Search</button>
-                    </div>
-                </div>
-                
-                <div class="friends-container" id="searchResults">
-                    <div class="no-contacts">
-                        <i class="fas fa-search" style="font-size: 48px; color: var(--text-secondary); margin-bottom: 10px;"></i>
-                        <p>Enter a search term to find people and content.</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- EMS Sections -->
-            <div id="emsDashboardSection" class="content-section">
-                <div class="section-header">
-                    <h2>EMS Dashboard Overview</h2>
-                    <p>Welcome to your education management dashboard</p>
-                </div>
-                
-                <div class="dashboard-cards">
-                    <div class="card">
-                        <div class="card-icon">
-                            <i class="fas fa-users"></i>
-                        </div>
-                        <h3>Total Students</h3>
-                        <div class="card-value" id="totalStudents">0</div>
-                        <div class="card-desc">Registered in academy</div>
-                    </div>
-                    
-                    <div class="card">
-                        <div class="card-icon">
-                            <i class="fas fa-coins"></i>
-                        </div>
-                        <h3>Fees Collected</h3>
-                        <div class="card-value"><span class="currency" id="feesCollected">0</span></div>
-                        <div class="card-desc">This month</div>
-                    </div>
-                    
-                    <div class="card">
-                        <div class="card-icon">
-                            <i class="fas fa-clipboard-check"></i>
-                        </div>
-                        <h3>Today's Attendance</h3>
-                        <div class="card-value" id="todayAttendance">0%</div>
-                        <div class="card-desc">Present students</div>
-                    </div>
-                    
-                    <div class="card">
-                        <div class="card-icon">
-                            <i class="fas fa-exclamation-circle"></i>
-                        </div>
-                        <h3>Pending Fees</h3>
-                        <div class="card-value" id="pendingFees">0</div>
-                        <div class="card-desc">For current month</div>
-                    </div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="table-container shadow-md">
-                        <h3>Recent Fee Collections</h3>
-                        <div class="table-responsive">
-                            <table id="recentFeesTable">
-                                <thead>
-                                    <tr>
-                                        <th>Student</th>
-                                        <th>Amount</th>
-                                        <th>Status</th>
-                                        <th>Date</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    
-                    <div class="table-container shadow-md">
-                        <h3>Recent Attendance</h3>
-                         <div class="table-responsive">
-                            <table id="recentAttendanceTable">
-                                <thead>
-                                    <tr>
-                                        <th>Date</th>
-                                        <th>Present</th>
-                                        <th>Absent</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="studentsSection" class="content-section">
-                <div class="section-header">
-                    <h2>Student Admission</h2>
-                    <p>Manage student records and information</p>
-                </div>
-                
-                <div class="form-container shadow-md">
-                    <h3>Add New Student</h3>
-                    <form id="studentForm">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="studentName">Student Name</label>
-                                <input type="text" id="studentName" class="form-control" placeholder="Full name of student" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="studentGrade">Grade (1-12)</label>
-                                <select id="studentGrade" class="form-control" required>
-                                    <option value="">Select Grade</option>
-                                    <option value="1">Grade 1</option>
-                                    <option value="2">Grade 2</option>
-                                    <option value="3">Grade 3</option>
-                                    <option value="4">Grade 4</option>
-                                    <option value="5">Grade 5</option>
-                                    <option value="6">Grade 6</option>
-                                    <option value="7">Grade 7</option>
-                                    <option value="8">Grade 8</option>
-                                    <option value="9">Grade 9</option>
-                                    <option value="10">Grade 10</option>
-                                    <option value="11">Grade 11</option>
-                                    <option value="12">Grade 12</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="studentPhone">Parent's Phone</label>
-                                <input type="tel" id="studentPhone" class="form-control" placeholder="03XX-XXXXXXX" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="studentFee">Monthly Fee (PKR)</label>
-                                <input type="number" id="studentFee" class="form-control" placeholder="Monthly fee amount" required>
-                            </div>
-                        </div>
-                        <button type="submit" class="btn" style="margin-top: 20px;"><i class="fas fa-plus-circle"></i> Add Student</button>
-                    </form>
-                </div>
-                
-                <div class="table-container shadow-md">
-                    <h3>Student Records (History)</h3>
-                    <div class="table-responsive">
-                        <table id="studentsTable">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Name</th>
-                                    <th>Grade</th>
-                                    <th>Phone</th>
-                                    <th>Monthly Fee</th>
-                                    <th>Fee Status</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <div id="feesSection" class="content-section">
-                <div class="section-header">
-                    <h2>Fee Collection</h2>
-                    <p>Record and manage student fee payments</p>
-                </div>
-                
-                <div class="form-container shadow-md">
-                    <h3>Collect Fee</h3>
-                    <form id="feeForm">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="feeStudent">Select Student</label>
-                                <select id="feeStudent" class="form-control" required>
-                                    <option value="">Select Student</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="feeMonth">Month</label>
-                                <input type="month" id="feeMonth" class="form-control" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="feeAmount">Amount (PKR)</label>
-                                <input type="number" id="feeAmount" class="form-control" placeholder="Amount to collect" required>
-                                <small id="feeHelp" style="color: var(--text-secondary); font-weight: 500; margin-top: 5px; display: block;">
+<div class="content-section" id="storiesSection">
+<div class="section-header">
+<h2>Stories</h2>
+<p>Share moments that disappear after 24 hours</p>
+</div>
+<div class="stories-container" id="storiesList">
+<div class="story-item">
+<div class="story-avatar story-add">
+<i class="fas fa-plus"></i>
+</div>
+<div class="story-username">Your Story</div>
+</div>
+</div>
+<div class="form-container shadow-md">
+<h3>Create New Story</h3>
+<form id="storyForm">
+<div class="form-group">
+<label for="storyText">Story Text</label>
+<textarea class="form-control" id="storyText" placeholder="What's happening?" rows="3"></textarea>
+</div>
+<button class="btn" type="submit">Add to Story</button>
+</form>
+</div>
+</div>
+<div class="content-section" id="notificationsSection">
+<div class="section-header">
+<h2>Notifications</h2>
+<p>Your recent activity and updates</p>
+</div>
+<div class="notifications-container" id="notificationsList">
+<div class="loading">Loading notifications...</div>
+</div>
+</div>
+<div class="content-section" id="searchSection">
+<div class="section-header">
+<h2>Search</h2>
+<p>Find people and content</p>
+</div>
+<div class="search-container">
+<div class="search-bar">
+<input class="search-input" id="globalSearch" placeholder="Search for people, posts, or hashtags..." type="text"/>
+<button class="btn" id="globalSearchBtn">Search</button>
+</div>
+</div>
+<div class="friends-container" id="searchResults">
+<div class="no-contacts">
+<i class="fas fa-search" style="font-size: 48px; color: var(--text-secondary); margin-bottom: 10px;"></i>
+<p>Enter a search term to find people and content.</p>
+</div>
+</div>
+</div>
+<div class="content-section" id="messagesSection">
+<div class="section-header">
+<h2>Messages</h2>
+<p>Chat with your friends</p>
+</div>
+<div class="messaging-container">
+<div class="contacts-list" id="contactsList"></div>
+<div class="chat-window" id="chatWindow">
+<div class="no-chat-selected">
+<i class="fas fa-comment-dots" style="font-size: 48px; color: var(--text-secondary); margin-bottom: 10px;"></i>
+<p>Select a friend to start chatting.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- EMS Sections -->
+<div class="content-section" id="emsDashboardSection">
+<div class="section-header">
+<h2>EMS Dashboard Overview</h2>
+<p>Welcome to your education management dashboard</p>
+</div>
+<div class="dashboard-cards">
+<div class="card">
+<div class="card-icon">
+<i class="fas fa-users"></i>
+</div>
+<h3>Total Students</h3>
+<div class="card-value" id="totalStudents">0</div>
+<div class="card-desc">Registered in academy</div>
+</div>
+<div class="card">
+<div class="card-icon">
+<i class="fas fa-coins"></i>
+</div>
+<h3>Fees Collected</h3>
+<div class="card-value"><span class="currency" id="feesCollected">0</span></div>
+<div class="card-desc">This month</div>
+</div>
+<div class="card">
+<div class="card-icon">
+<i class="fas fa-clipboard-check"></i>
+</div>
+<h3>Today's Attendance</h3>
+<div class="card-value" id="todayAttendance">0%</div>
+<div class="card-desc">Present students</div>
+</div>
+<div class="card">
+<div class="card-icon">
+<i class="fas fa-exclamation-circle"></i>
+</div>
+<h3>Pending Fees</h3>
+<div class="card-value" id="pendingFees">0</div>
+<div class="card-desc">For current month</div>
+</div>
+</div>
+<div class="form-row">
+<div class="table-container shadow-md">
+<h3>Recent Fee Collections</h3>
+<div class="table-responsive">
+<table id="recentFeesTable">
+<thead>
+<tr>
+<th>Student</th>
+<th>Amount</th>
+<th>Status</th>
+<th>Date</th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+</div>
+</div>
+<div class="table-container shadow-md">
+<h3>Recent Attendance</h3>
+<div class="table-responsive">
+<table id="recentAttendanceTable">
+<thead>
+<tr>
+<th>Date</th>
+<th>Present</th>
+<th>Absent</th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</div>
+<div class="content-section" id="studentsSection">
+<div class="section-header">
+<h2>Student Admission</h2>
+<p>Manage student records and information</p>
+</div>
+<div class="form-container shadow-md">
+<h3>Add New Student</h3>
+<form id="studentForm">
+<div class="form-row">
+<div class="form-group">
+<label for="studentName">Student Name</label>
+<input class="form-control" id="studentName" placeholder="Full name of student" required="" type="text"/>
+</div>
+<div class="form-group">
+<label for="studentGrade">Grade (1-12)</label>
+<select class="form-control" id="studentGrade" required="">
+<option value="">Select Grade</option>
+<option value="1">Grade 1</option>
+<option value="2">Grade 2</option>
+<option value="3">Grade 3</option>
+<option value="4">Grade 4</option>
+<option value="5">Grade 5</option>
+<option value="6">Grade 6</option>
+<option value="7">Grade 7</option>
+<option value="8">Grade 8</option>
+<option value="9">Grade 9</option>
+<option value="10">Grade 10</option>
+<option value="11">Grade 11</option>
+<option value="12">Grade 12</option>
+</select>
+</div>
+<div class="form-group">
+<label for="studentPhone">Parent's Phone</label>
+<input class="form-control" id="studentPhone" placeholder="03XX-XXXXXXX" required="" type="tel"/>
+</div>
+<div class="form-group">
+<label for="studentFee">Monthly Fee (PKR)</label>
+<input class="form-control" id="studentFee" placeholder="Monthly fee amount" required="" type="number"/>
+</div>
+</div>
+<button class="btn" style="margin-top: 20px;" type="submit"><i class="fas fa-plus-circle"></i> Add Student</button>
+</form>
+</div>
+<div class="table-container shadow-md">
+<h3>Student Records (History)</h3>
+<div class="table-responsive">
+<table id="studentsTable">
+<thead>
+<tr>
+<th>ID</th>
+<th>Name</th>
+<th>Grade</th>
+<th>Phone</th>
+<th>Monthly Fee</th>
+<th>Fee Status</th>
+<th>Actions</th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="content-section" id="feesSection">
+<div class="section-header">
+<h2>Fee Collection</h2>
+<p>Record and manage student fee payments</p>
+</div>
+<div class="form-container shadow-md">
+<h3>Collect Fee</h3>
+<form id="feeForm">
+<div class="form-row">
+<div class="form-group">
+<label for="feeStudent">Select Student</label>
+<select class="form-control" id="feeStudent" required="">
+<option value="">Select Student</option>
+</select>
+</div>
+<div class="form-group">
+<label for="feeMonth">Month</label>
+<input class="form-control" id="feeMonth" required="" type="month"/>
+</div>
+<div class="form-group">
+<label for="feeAmount">Amount (PKR)</label>
+<input class="form-control" id="feeAmount" placeholder="Amount to collect" required="" type="number"/>
+<small id="feeHelp" style="color: var(--text-secondary); font-weight: 500; margin-top: 5px; display: block;">
                                     Monthly Fee: <span class="currency" id="monthlyFeeDisplay" style="color: var(--success);">0</span> | 
                                     <span style="color: var(--danger);">Remaining/Due: <span class="currency" id="remainingFeeDisplay" style="color: var(--danger);">0</span></span>
-                                </small>
-                            </div>
-                            <div class="form-group">
-                                <label for="feeDate">Payment Date</label>
-                                <input type="date" id="feeDate" class="form-control" required>
-                            </div>
-                        </div>
-                        <button type="submit" class="btn" style="margin-top: 20px;"><i class="fas fa-money-check"></i> Collect Fee</button>
-                    </form>
-                </div>
-                
-                <div class="table-container shadow-md">
-                    <h3>Fee Records (History)</h3>
-                    <div class="table-responsive">
-                        <table id="feesTable">
-                            <thead>
-                                <tr>
-                                    <th>Receipt ID</th>
-                                    <th>Student Name</th>
-                                    <th>Month</th>
-                                    <th>Amount</th>
-                                    <th>Status</th>
-                                    <th>Date Paid</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <div id="attendanceSection" class="content-section">
-                <div class="section-header">
-                    <h2>Attendance Management</h2>
-                    <p>Track and manage student attendance</p>
-                </div>
-                
-                <div class="form-container shadow-md">
-                    <h3>Mark Attendance</h3>
-                    <form id="attendanceForm">
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="attendanceDate">Date</label>
-                                <input type="date" id="attendanceDate" class="form-control" required>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label>Mark Attendance for Students</label>
-                            <div id="attendanceList" style="max-height: 500px; overflow-y: auto; border: 1px solid var(--border); padding: 15px; border-radius: 8px; background-color: #2b2b2b;">
-                                </div>
-                        </div>
-                        <button type="submit" class="btn" style="margin-top: 20px;"><i class="fas fa-save"></i> Save Attendance</button>
-                    </form>
-                </div>
-                
-                <div class="table-container shadow-md">
-                    <h3>Attendance Records (History)</h3>
-                    <div class="table-responsive">
-                        <table id="attendanceTable">
-                            <thead>
-                                <tr>
-                                    <th>Date</th>
-                                    <th>Present</th>
-                                    <th>Absent</th>
-                                    <th>Percentage</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <div id="settingsSection" class="content-section">
-                <div class="section-header">
-                    <h2>Settings</h2>
-                    <p>Manage your account and preferences</p>
-                </div>
-                
-                <div class="form-container shadow-md">
-                    <h3>Account Settings</h3>
-                    <form id="settingsForm">
-                        <div class="form-group">
-                            <label for="changePasswordEmail">Reset Password</label>
-                            <input type="email" id="changePasswordEmail" class="form-control" placeholder="Enter email to send reset link" required>
-                            <button type="button" class="btn btn-warning" onclick="sendPasswordReset()">Send Reset Link</button>
-                        </div>
-                        <div class="form-group">
-                            <label>Notifications</label>
-                            <label class="switch">
-                                <input type="checkbox" id="notificationsToggle" checked>
-                                <span class="slider"></span>
-                            </label>
-                            <small>Enable/disable push notifications</small>
-                        </div>
-                        <div class="form-group">
-                            <label for="privacySetting">Privacy</label>
-                            <select id="privacySetting" class="form-control">
-                                <option value="public">Public</option>
-                                <option value="friends">Friends Only</option>
-                                <option value="private">Private</option>
-                            </select>
-                        </div>
-                    </form>
-                </div>
-            </div>
-
-            <div id="brandingSection" class="content-section">
-                <div class="section-header">
-                    <h2>Academy Branding</h2>
-                    <p>Set up your school or academy details for WhatsApp receipts and alerts</p>
-                </div>
-                
-                <div class="branding-container">
-                    <div class="form-container shadow-md">
-                        <h3>Branding Settings</h3>
-                        <form id="brandingForm">
-                            <div class="form-row branding-form-row">
-                                <div class="form-group">
-                                    <label for="schoolName"><i class="fas fa-school"></i> School/Academy Name</label>
-                                    <input type="text" id="schoolName" class="form-control" placeholder="Enter your school or academy name" disabled>
-                                </div>
-                                <div class="form-group">
-                                    <label for="schoolPhone"><i class="fas fa-phone"></i> Academy Phone Number</label>
-                                    <input type="tel" id="schoolPhone" class="form-control" placeholder="03XX-XXXXXXX" disabled>
-                                </div>
-                            </div>
-                            <button type="submit" class="btn btn-success" disabled><i class="fas fa-save"></i> Save Branding</button>
-                            <div id="saveStatus" class="save-status"></div>
-                        </form>
-                    </div>
-                    
-                    <div class="form-container shadow-md">
-                        <h3>WhatsApp Message Preview</h3>
-                        <div id="brandingPreview" class="branding-preview">
+</small>
+</div>
+<div class="form-group">
+<label for="feeDate">Payment Date</label>
+<input class="form-control" id="feeDate" required="" type="date"/>
+</div>
+</div>
+<button class="btn" style="margin-top: 20px;" type="submit"><i class="fas fa-money-check"></i> Collect Fee</button>
+</form>
+</div>
+<div class="table-container shadow-md">
+<h3>Fee Records (History)</h3>
+<div class="table-responsive">
+<table id="feesTable">
+<thead>
+<tr>
+<th>Receipt ID</th>
+<th>Student Name</th>
+<th>Month</th>
+<th>Amount</th>
+<th>Status</th>
+<th>Date Paid</th>
+<th>Actions</th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="content-section" id="attendanceSection">
+<div class="section-header">
+<h2>Attendance Management</h2>
+<p>Track and manage student attendance</p>
+</div>
+<div class="form-container shadow-md">
+<h3>Mark Attendance</h3>
+<form id="attendanceForm">
+<div class="form-row">
+<div class="form-group">
+<label for="attendanceDate">Date</label>
+<input class="form-control" id="attendanceDate" required="" type="date"/>
+</div>
+</div>
+<div class="form-group">
+<label>Mark Attendance for Students</label>
+<div id="attendanceList" style="max-height: 500px; overflow-y: auto; border: 1px solid var(--border); padding: 15px; border-radius: 8px; background-color: #2b2b2b;">
+</div>
+</div>
+<button class="btn" style="margin-top: 20px;" type="submit"><i class="fas fa-save"></i> Save Attendance</button>
+</form>
+</div>
+<div class="table-container shadow-md">
+<h3>Attendance Records (History)</h3>
+<div class="table-responsive">
+<table id="attendanceTable">
+<thead>
+<tr>
+<th>Date</th>
+<th>Present</th>
+<th>Absent</th>
+<th>Percentage</th>
+<th>Actions</th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="content-section" id="settingsSection">
+<div class="section-header">
+<h2>Settings</h2>
+<p>Manage your account and preferences</p>
+</div>
+<div class="form-container shadow-md">
+<h3>Account Settings</h3>
+<form id="settingsForm">
+<div class="form-group">
+<label for="changePasswordEmail">Reset Password</label>
+<input class="form-control" id="changePasswordEmail" placeholder="Enter email to send reset link" required="" type="email"/>
+<button class="btn btn-warning" onclick="sendPasswordReset()" type="button">Send Reset Link</button>
+</div>
+<div class="form-group">
+<label>Notifications</label>
+<label class="switch">
+<input checked="" id="notificationsToggle" type="checkbox"/>
+<span class="slider"></span>
+</label>
+<small>Enable/disable push notifications</small>
+</div>
+<div class="form-group">
+<label for="privacySetting">Privacy</label>
+<select class="form-control" id="privacySetting">
+<option value="public">Public</option>
+<option value="friends">Friends Only</option>
+<option value="private">Private</option>
+</select>
+</div>
+</form>
+</div>
+</div>
+<div class="content-section" id="brandingSection">
+<div class="section-header">
+<h2>Academy Branding</h2>
+<p>Set up your school or academy details for WhatsApp receipts and alerts</p>
+</div>
+<div class="branding-container">
+<div class="form-container shadow-md">
+<h3>Branding Settings</h3>
+<form id="brandingForm">
+<div class="form-row branding-form-row">
+<div class="form-group">
+<label for="schoolName"><i class="fas fa-school"></i> School/Academy Name</label>
+<input class="form-control" disabled="" id="schoolName" placeholder="Enter your school or academy name" type="text"/>
+</div>
+<div class="form-group">
+<label for="schoolPhone"><i class="fas fa-phone"></i> Academy Phone Number</label>
+<input class="form-control" disabled="" id="schoolPhone" placeholder="03XX-XXXXXXX" type="tel"/>
+</div>
+</div>
+<button class="btn btn-success" disabled="" type="submit"><i class="fas fa-save"></i> Save Branding</button>
+<div class="save-status" id="saveStatus"></div>
+</form>
+</div>
+<div class="form-container shadow-md">
+<h3>WhatsApp Message Preview</h3>
+<div class="branding-preview" id="brandingPreview">
                             Fee Receipt - Sample Student
                             
                             Month: 2025-10
@@ -2452,120 +2400,114 @@
                             
                             Thank you! - Created by Sample User
                         </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Share Menu -->
-    <div id="shareMenu" class="share-menu">
-        <ul>
-            <li onclick="copyPostLink(currentPostId)"><i class="fas fa-link"></i> Copy Link</li>
-            <li onclick="savePost(currentPostId)"><i class="fas fa-bookmark"></i> Save Post</li>
-            <li onclick="shareToWhatsApp(currentPostId)"><i class="fab fa-whatsapp"></i> Share to WhatsApp</li>
-            <li onclick="closeShareMenu()"><i class="fas fa-times"></i> Cancel</li>
-        </ul>
-    </div>
-
-    <!-- Create Post Modal -->
-    <div id="postModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3><i class="fas fa-edit"></i> Create Post</h3>
-                <span class="close-modal" onclick="closePostModal()">×</span>
-            </div>
-            <form id="createPostForm">
-                <div class="form-group">
-                    <textarea id="postContent" class="form-control" placeholder="What's on your mind?" rows="5" required></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="postMedia">Photo/Video (optional)</label>
-                    <input type="file" id="postMedia" accept="image/*,video/*" />
-                </div>
-                <div class="form-group">
-                    <label for="fontSize">Font Size</label>
-                    <select id="fontSize" class="form-control">
-                        <option value="normal">Normal</option>
-                        <option value="large">Large</option>
-                    </select>
-                </div>
-                <div style="display: flex; justify-content: space-between; gap: 10px; margin-top: 20px;">
-                    <button type="button" class="btn btn-danger" onclick="closePostModal()">Cancel</button>
-                    <button type="submit" class="btn btn-success">Post</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Edit Profile Modal -->
-    <div id="profileModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3><i class="fas fa-user-edit"></i> Edit Profile</h3>
-                <span class="close-modal" onclick="closeProfileModal()">×</span>
-            </div>
-            <form id="editProfileForm">
-                <div class="form-group">
-                    <label for="editFullName">Full Name</label>
-                    <input type="text" id="editFullName" class="form-control" required>
-                </div>
-                <div class="form-group">
-                    <label for="editUsername">Username</label>
-                    <input type="text" id="editUsername" class="form-control" required>
-                </div>
-                <div class="form-group">
-                    <label for="editBio">Bio</label>
-                    <textarea id="editBio" class="form-control" rows="3"></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="editAvatar">Avatar Initial</label>
-                    <input type="text" id="editAvatar" class="form-control" maxlength="1" required>
-                </div>
-                <div style="display: flex; justify-content: space-between; gap: 10px; margin-top: 20px;">
-                    <button type="button" class="btn btn-danger" onclick="closeProfileModal()">Cancel</button>
-                    <button type="submit" class="btn btn-success">Save Changes</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!-- Story Viewer Modal -->
-    <div id="storyModal" class="modal">
-        <div class="modal-content" style="width: 500px; max-width: 90%;">
-            <div class="modal-header">
-                <h3 id="storyUsername"><i class="fas fa-history"></i> Story</h3>
-                <span class="close-modal" onclick="closeStoryModal()">×</span>
-            </div>
-            <div class="story-content" id="storyContent"></div>
-            <div class="comments-section" id="storyRepliesSection">
-                <div class="comment-input-container">
-                    <input type="text" class="comment-input" placeholder="Reply to this story..." id="storyReplyInput">
-                    <button class="add-comment-btn" onclick="addStoryReply()">Reply</button>
-                </div>
-                <div id="storyReplies"></div>
-            </div>
-        </div>
-    </div>
-
-    <div id="pinModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3><i class="fas fa-lock"></i> Enter Security PIN</h3>
-                <span class="close-modal" onclick="closePinModal()">×</span>
-            </div>
-            <p style="margin-bottom: 15px; color: var(--text-secondary);">To perform this secure action (Delete/Edit), please enter your 4-digit PIN.</p>
-            <div class="form-group">
-                <input type="password" id="pinInput" class="form-control" placeholder="Enter your 4-digit PIN" maxlength="4">
-            </div>
-            <div style="display: flex; justify-content: space-between; gap: 10px; margin-top: 20px;">
-                <button class="btn btn-danger" onclick="closePinModal()">Cancel</button>
-                <button class="btn btn-success" onclick="verifyPin()">Verify PIN</button>
-            </div>
-        </div>
-    </div>
-
-    <script>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Share Menu -->
+<div class="share-menu" id="shareMenu">
+<ul>
+<li onclick="copyPostLink(currentPostId)"><i class="fas fa-link"></i> Copy Link</li>
+<li onclick="savePost(currentPostId)"><i class="fas fa-bookmark"></i> Save Post</li>
+<li onclick="shareToWhatsApp(currentPostId)"><i class="fab fa-whatsapp"></i> Share to WhatsApp</li>
+<li onclick="closeShareMenu()"><i class="fas fa-times"></i> Cancel</li>
+</ul>
+</div>
+<!-- Create Post Modal -->
+<div class="modal" id="postModal">
+<div class="modal-content">
+<div class="modal-header">
+<h3><i class="fas fa-edit"></i> Create Post</h3>
+<span class="close-modal" onclick="closePostModal()">×</span>
+</div>
+<form id="createPostForm">
+<div class="form-group">
+<textarea class="form-control" id="postContent" placeholder="What's on your mind?" required="" rows="5"></textarea>
+</div>
+<div class="form-group">
+<label for="postMedia">Add Photo/Video (optional)</label>
+<input accept="image/*,video/*" class="form-control" id="postMedia" type="file"/>
+</div>
+<div class="form-group">
+<label for="fontSize">Font Size</label>
+<select class="form-control" id="fontSize">
+<option value="normal">Normal</option>
+<option value="large">Large</option>
+</select>
+</div>
+<div style="display: flex; justify-content: space-between; gap: 10px; margin-top: 20px;">
+<button class="btn btn-danger" onclick="closePostModal()" type="button">Cancel</button>
+<button class="btn btn-success" type="submit">Post</button>
+</div>
+</form>
+</div>
+</div>
+<!-- Edit Profile Modal -->
+<div class="modal" id="profileModal">
+<div class="modal-content">
+<div class="modal-header">
+<h3><i class="fas fa-user-edit"></i> Edit Profile</h3>
+<span class="close-modal" onclick="closeProfileModal()">×</span>
+</div>
+<form id="editProfileForm">
+<div class="form-group">
+<label for="editFullName">Full Name</label>
+<input class="form-control" id="editFullName" required="" type="text"/>
+</div>
+<div class="form-group">
+<label for="editUsername">Username</label>
+<input class="form-control" id="editUsername" required="" type="text"/>
+</div>
+<div class="form-group">
+<label for="editBio">Bio</label>
+<textarea class="form-control" id="editBio" rows="3"></textarea>
+</div>
+<div class="form-group">
+<label for="editAvatar">Avatar Initial</label>
+<input class="form-control" id="editAvatar" maxlength="1" required="" type="text"/>
+</div>
+<div style="display: flex; justify-content: space-between; gap: 10px; margin-top: 20px;">
+<button class="btn btn-danger" onclick="closeProfileModal()" type="button">Cancel</button>
+<button class="btn btn-success" type="submit">Save Changes</button>
+</div>
+</form>
+</div>
+</div>
+<!-- Story Viewer Modal -->
+<div class="modal" id="storyModal">
+<div class="modal-content" style="width: 500px; max-width: 90%;">
+<div class="modal-header">
+<h3 id="storyUsername"><i class="fas fa-history"></i> Story</h3>
+<span class="close-modal" onclick="closeStoryModal()">×</span>
+</div>
+<div class="story-content" id="storyContent"></div>
+<div class="comments-section" id="storyRepliesSection">
+<div class="comment-input-container">
+<input class="comment-input" id="storyReplyInput" placeholder="Reply to this story..." type="text"/>
+<button class="add-comment-btn" onclick="addStoryReply()">Reply</button>
+</div>
+<div id="storyReplies"></div>
+</div>
+</div>
+</div>
+<div class="modal" id="pinModal">
+<div class="modal-content">
+<div class="modal-header">
+<h3><i class="fas fa-lock"></i> Enter Security PIN</h3>
+<span class="close-modal" onclick="closePinModal()">×</span>
+</div>
+<p style="margin-bottom: 15px; color: var(--text-secondary);">To perform this secure action (Delete/Edit), please enter your 4-digit PIN.</p>
+<div class="form-group">
+<input class="form-control" id="pinInput" maxlength="4" placeholder="Enter your 4-digit PIN" type="password"/>
+</div>
+<div style="display: flex; justify-content: space-between; gap: 10px; margin-top: 20px;">
+<button class="btn btn-danger" onclick="closePinModal()">Cancel</button>
+<button class="btn btn-success" onclick="verifyPin()">Verify PIN</button>
+</div>
+</div>
+</div>
+<script>
         // Global variables for share menu
         let currentPostId = null;
         let currentStoryId = null;
@@ -2632,7 +2574,14 @@
                             currentUser.avatar = data.avatar || currentUser.fullName.charAt(0).toUpperCase();
                             currentUser.createdAt = data.createdAt;
                             currentUser.pin = data.pin;
-                            currentUser.brandingUnlocked = data.brandingUnlocked || false;
+                            currentUser.brandingUnlocked = data.brandingUnlocked || false; // Fixed: Fetch brandingUnlocked
+                            const dbToken = data.sessionToken;
+                            const localToken = localStorage.getItem('sessionToken');
+                            if (dbToken && localToken !== dbToken) {
+                                auth.signOut();
+                                alert('Logged out: Session active on another device.');
+                                return;
+                            }
                         }
                         await checkAndGenerateKeys();
                         loadUserData();
@@ -2754,6 +2703,9 @@
             
             auth.signInWithEmailAndPassword(email, password)
                 .then((userCredential) => {
+                    const sessionToken = generateId();
+                    db.ref('users/' + userCredential.user.uid + '/sessionToken').set(sessionToken);
+                    localStorage.setItem('sessionToken', sessionToken);
                     showAuthMessage('Login successful! Redirecting to dashboard...', 'success');
                 })
                 .catch((error) => {
@@ -2951,11 +2903,6 @@
             setInterval(() => {
                 myPresenceRef.set(firebase.database.ServerValue.TIMESTAMP);
             }, 60000); // Update every minute
-            // Listen for branding unlock changes in real-time and update UI
-            db.ref('users/' + currentUser.uid + '/brandingUnlocked').on('value', (snap) => {
-                currentUser.brandingUnlocked = !!snap.val();
-                try { loadBrandingSection(); } catch(e) { console.warn('loadBrandingSection not ready yet'); }
-            });
         }
 
         function showSection(section) {
@@ -3192,6 +3139,7 @@ function contactAdmin() {
         function openPostModal() {
             document.getElementById('postContent').value = '';
             document.getElementById('fontSize').value = 'normal';
+            document.getElementById('postMedia').value = '';
             document.getElementById('postModal').style.display = 'flex';
         }
 
@@ -3199,19 +3147,18 @@ function contactAdmin() {
             document.getElementById('postModal').style.display = 'none';
         }
 
-        function handleCreatePost(e) {
+        async function handleCreatePost(e) {
             e.preventDefault();
-
+            
             const content = document.getElementById('postContent').value;
             const fontSize = document.getElementById('fontSize').value;
-            const fileInput = document.getElementById('postMedia');
-            const file = fileInput && fileInput.files && fileInput.files[0] ? fileInput.files[0] : null;
-
-            if (!content.trim() && !file) {
-                alert('Please enter some content or attach a photo/video for your post');
+            const file = document.getElementById('postMedia').files[0];
+            
+            if (!content.trim()) {
+                alert('Please enter some content for your post');
                 return;
             }
-
+            
             const postId = db.ref('posts').push().key;
             const newPost = {
                 id: postId,
@@ -3226,41 +3173,31 @@ function contactAdmin() {
                 comments: 0,
                 shares: 0
             };
-
-            // Helper to save post to DB (after optional media upload)
-            function savePostWithMedia(postObj) {
-                db.ref('posts/' + postId).set(postObj)
-                    .then(() => {
-                        document.getElementById('createPostForm').reset();
-                        closePostModal();
-                        alert('Post created successfully!');
-
-                        // Refresh posts feed
-                        if (document.getElementById('dashboardSection').classList.contains('active')) {
-                            loadNewsFeed();
-                        }
-                        if (document.getElementById('profileSection').classList.contains('active')) {
-                            loadProfilePosts();
-                        }
-                    })
-                    .catch((error) => {
-                        alert('Error creating post: ' + error.message);
-                    });
-            }
-
+            
             if (file) {
-                const storageRef = storage.ref().child('posts_media/' + postId + '/' + file.name);
-                const uploadTask = storageRef.put(file);
-                uploadTask.then(snapshot => snapshot.ref.getDownloadURL()).then(url => {
-                    newPost.mediaUrl = url;
-                    newPost.mediaType = file.type && file.type.startsWith('video') ? 'video' : 'image';
-                    savePostWithMedia(newPost);
-                }).catch(err => {
-                    alert('Error uploading media: ' + err.message);
-                });
-            } else {
-                savePostWithMedia(newPost);
+                const storageRef = storage.ref(`posts/${postId}/${file.name}`);
+                await storageRef.put(file);
+                const mediaURL = await storageRef.getDownloadURL();
+                newPost.mediaURL = mediaURL;
+                newPost.mediaType = file.type.startsWith('image') ? 'image' : 'video';
             }
+            
+            db.ref('posts/' + postId).set(newPost)
+                .then(() => {
+                    closePostModal();
+                    alert('Post created successfully!');
+                    
+                    // Refresh posts feed
+                    if (document.getElementById('dashboardSection').classList.contains('active')) {
+                        loadNewsFeed();
+                    }
+                    if (document.getElementById('profileSection').classList.contains('active')) {
+                        loadProfilePosts();
+                    }
+                })
+                .catch((error) => {
+                    alert('Error creating post: ' + error.message);
+                });
         }
 
         function loadNewsFeed() {
@@ -3338,6 +3275,15 @@ function contactAdmin() {
             
             const fontStyle = post.fontSize === 'large' ? 'font-size: 20px;' : '';
             
+            let mediaHTML = '';
+            if (post.mediaURL) {
+                if (post.mediaType === 'image') {
+                    mediaHTML = `<img src="${post.mediaURL}" style="max-width:100%; border-radius:8px; margin-top:10px;">`;
+                } else {
+                    mediaHTML = `<video src="${post.mediaURL}" controls style="max-width:100%; border-radius:8px; margin-top:10px;"></video>`;
+                }
+            }
+            
             postElement.innerHTML = `
                 <div class="post-header">
                     <div class="avatar-container">
@@ -3350,7 +3296,7 @@ function contactAdmin() {
                 </div>
                 <div class="post-content" style="${fontStyle}">
                     <p>${post.content}</p>
-                    ${post.mediaUrl ? (post.mediaType === 'image' ? `<div style="margin-top:10px;"><img src="${post.mediaUrl}" style="max-width:100%; border-radius:6px;"/></div>` : `<div style="margin-top:10px;"><video src="${post.mediaUrl}" controls style="max-width:100%; border-radius:6px;"></video></div>`) : ''}
+                    ${mediaHTML}
                 </div>
                 <div class="post-actions">
                     <div class="post-action ${post.userLiked ? 'active' : ''}" onclick="toggleLikePost('${post.id}')">
@@ -3685,26 +3631,23 @@ function contactAdmin() {
             });
         }
 
-        
-function createFriendElement(user, uid) {
-    const friendCard = document.createElement('div');
-    friendCard.className = 'friend-card';
-    const lastSeen = user.lastSeen || user.last_seen || null;
-    const online = lastSeen ? isOnline(lastSeen) : false;
-    const avatarHtml = `<div class="friend-avatar avatar-container">${user.avatar || ''}${online ? '<span class="online-indicator"></span>' : ''}</div>`;
-    friendCard.innerHTML = `
-        ${avatarHtml}
-        <div class="friend-name">${user.fullName || ''}</div>
-        <div class="friend-username">@${user.username || ''}</div>
-        <div class="friend-actions">
-            <button class="btn btn-sm btn-success" onclick="openChatWith('${uid}')">Message</button>
-            <button class="btn btn-sm btn-danger" onclick="unfriend('${uid}')">Unfriend</button>
-            <button class="btn btn-sm btn-warning" onclick="toggleBlock('${uid}')">Block/Unblock</button>
-        </div>
-    `;
-    return friendCard;
-}
-function unfriend(uid) {
+        function createFriendElement(user, uid) {
+            const friendCard = document.createElement('div');
+            friendCard.className = 'friend-card';
+            friendCard.innerHTML = `
+                <div class="friend-avatar">${user.avatar}</div>
+                <div class="friend-name">${user.fullName}</div>
+                <div class="friend-username">@${user.username}</div>
+                <div class="friend-actions">
+                    <button class="btn btn-sm btn-success" onclick="openChatWith('${uid}')">Message</button>
+                    <button class="btn btn-sm btn-danger" onclick="unfriend('${uid}')">Unfriend</button>
+                    <button class="btn btn-sm btn-warning" onclick="toggleBlock('${uid}')">Block/Unblock</button>
+                </div>
+            `;
+            return friendCard;
+        }
+
+        function unfriend(uid) {
             if (confirm('Are you sure you want to unfriend this user?')) {
                 db.ref(`friends/${currentUser.uid}/${uid}`).remove();
                 db.ref(`friends/${uid}/${currentUser.uid}`).remove();
@@ -4180,43 +4123,45 @@ function unfriend(uid) {
             
             currentChatUser.publicKey = users[contact.uid].publicKey;
             currentChatUser.sharedKey = await deriveSharedSecret(currentUser.privateKey, currentChatUser.publicKey);
-            
-            currentMessagesRef.orderByChild('timestamp').on('child_added', async (snap) => {
-                const msg = snap.val();
-                const isSent = msg.sender === currentUser.uid;
-                const time = new Date(msg.timestamp).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
-                
-                let messageText;
-                if (msg.text) {
-                  messageText = msg.text; // Backward compatibility for old messages
-                } else if (msg.encrypted && msg.iv) {
-                  const encrypted = base64ToArrayBuffer(msg.encrypted);
-                  const iv = base64ToArrayBuffer(msg.iv);
-                  const decrypted = await crypto.subtle.decrypt(
-                    {
-                      name: "AES-GCM",
-                      iv: iv,
-                    },
-                    currentChatUser.sharedKey,
-                    encrypted
-                  );
-                  messageText = new TextDecoder().decode(decrypted);
-                } else {
-                  messageText = '[Message could not be decrypted]';
-                }
-                
-                const messageElement = document.createElement('div');
-                messageElement.className = `message ${isSent ? 'sent' : 'received'}`;
-                messageElement.innerHTML = `
-                    <div class="message-bubble">${messageText}${isSent ? ` <button onclick="deleteMessage('${snap.key}', '${chatId}')"><i class="fas fa-trash" style="font-size: 10px; color: #fff;"></i></button>` : ''}</div>
-                    <span class="message-time">${time}</span>
-                `;
-                
-                if (isSent) {
-                    setupLongPress(messageElement.querySelector('.message-bubble'), () => deleteMessage(snap.key, chatId));
-                }
-                
-                chatMessages.appendChild(messageElement);
+            currentMessagesRef.orderByChild('timestamp').on('value', async (snap) => { // Fixed: Changed to 'value' for full refresh if needed
+                chatMessages.innerHTML = '';
+                snap.forEach(async (child) => {
+                    const msg = child.val();
+                    const isSent = msg.sender === currentUser.uid;
+                    const time = new Date(msg.timestamp).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
+                    
+                    let messageText;
+                    if (msg.text) {
+                      messageText = msg.text; // Backward compatibility for old messages
+                    } else if (msg.encrypted && msg.iv) {
+                      const encrypted = base64ToArrayBuffer(msg.encrypted);
+                      const iv = base64ToArrayBuffer(msg.iv);
+                      const decrypted = await crypto.subtle.decrypt(
+                        {
+                          name: "AES-GCM",
+                          iv: iv,
+                        },
+                        currentChatUser.sharedKey,
+                        encrypted
+                      );
+                      messageText = new TextDecoder().decode(decrypted);
+                    } else {
+                      messageText = '[Message could not be decrypted]';
+                    }
+                    
+                    const messageElement = document.createElement('div');
+                    messageElement.className = `message ${isSent ? 'sent' : 'received'}`;
+                    messageElement.innerHTML = `
+                        <div class="message-bubble">${messageText}${isSent ? ` <button onclick="deleteMessage('${child.key}', '${chatId}')"><i class="fas fa-trash" style="font-size: 10px; color: #fff;"></i></button>` : ''}</div>
+                        <span class="message-time">${time}</span>
+                    `;
+                    
+                    if (isSent) {
+                        setupLongPress(messageElement.querySelector('.message-bubble'), () => deleteMessage(child.key, chatId));
+                    }
+                    
+                    chatMessages.appendChild(messageElement);
+                });
                 chatMessages.scrollTop = chatMessages.scrollHeight;
             });
             
@@ -4420,14 +4365,14 @@ function unfriend(uid) {
         function updateFeeInfo() {
             if (!validateUserSession()) return;
             
-            const studentId = document.getElementById('feeStudent').value;
+            const student = document.getElementById('feeStudent').value;
             const month = document.getElementById('feeMonth').value;
             
             const monthlyFeeDisplay = document.getElementById('monthlyFeeDisplay');
             const remainingFeeDisplay = document.getElementById('remainingFeeDisplay');
             const feeAmountInput = document.getElementById('feeAmount');
             
-            if (!studentId || !month) {
+            if (!student || !month) {
                 monthlyFeeDisplay.textContent = '0';
                 remainingFeeDisplay.textContent = '0';
                 feeAmountInput.max = null;
@@ -4435,22 +4380,22 @@ function unfriend(uid) {
                 return;
             }
             
-            const student = students[studentId];
-            if (!student) return;
+            const studentData = students[student];
+            if (!studentData) return;
             
             // Calculate already paid amount for this month
-            const paidFees = Object.values(fees).filter(f => f.studentId === studentId && f.month === month);
-            const totalPaid = paidFees.reduce((sum, fee) => sum + fee.amount, 0);
-            const remaining = student.fee - totalPaid;
+            const paidFees = Object.values(fees).filter(f => f.studentId === student && f.month === month);
+            const totalPaid = paidFees.reduce((sum, f) => sum + f.amount, 0);
+            const remaining = studentData.fee - totalPaid;
             
             // Update displays
-            monthlyFeeDisplay.textContent = student.fee;
+            monthlyFeeDisplay.textContent = studentData.fee;
             remainingFeeDisplay.textContent = remaining < 0 ? 0 : remaining;
             
             // Set max value for fee amount input to the remaining fee
             feeAmountInput.max = remaining < 0 ? 0 : remaining;
             
-            // Set set default value for amount input (suggest full remaining amount)
+            // Set default value for amount input (suggest full remaining amount)
             if (remaining > 0) {
                  feeAmountInput.value = remaining;
             } else {
@@ -4585,7 +4530,7 @@ function unfriend(uid) {
                 const paidFees = Object.values(fees).filter(f => f.studentId === fee.studentId && f.month === fee.month);
                 const totalPaid = paidFees.reduce((sum, f) => sum + f.amount, 0);
                 const remaining = student.fee - totalPaid;
-
+                
                 let status = remaining <= 0 ? 'Paid' : 'Partial';
                 
                 const row = document.createElement('tr');
