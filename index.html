@@ -3,9 +3,8 @@
 <head>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Popcorn - Complete Social Media Platform with EMS</title>
+<title>Popcorn - EMS</title>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet"/>
-<!-- Firebase SDK -->
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-database-compat.js"></script>
@@ -36,6 +35,7 @@
             --shadow-hover: 0 1px 4px rgba(0, 0, 0, 0.2);
             --radius: 8px;
             --transition: all 0.2s ease-in-out;
+            --animation-duration: 0.3s;
         }
 
         body {
@@ -333,7 +333,7 @@
 
         .sidebar-menu {
             list-style: none;
-            padding: 20px 0;
+            padding:20px 0;
         }
 
         .sidebar-menu li {
@@ -731,263 +731,6 @@
             transform: translateY(-1px);
         }
 
-        /* Messaging System Styles */
-        .messaging-container {
-            display: flex;
-            height: calc(100vh - 150px);
-            background: var(--background);
-            border-radius: var(--radius);
-            overflow: hidden;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border);
-        }
-
-        .contacts-list {
-            width: 320px;
-            background: var(--surface);
-            border-right: 1px solid var(--border);
-            overflow-y: auto;
-            padding: 0;
-        }
-
-        .contact-item {
-            padding: 20px;
-            cursor: pointer;
-            border-bottom: 1px solid var(--border);
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            position: relative;
-        }
-
-        .contact-item::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 4px;
-            background: var(--primary);
-            transform: scaleY(0);
-            transition: var(--transition);
-        }
-
-        .contact-item:hover::before,
-        .contact-item.active::before {
-            transform: scaleY(1);
-        }
-
-        .contact-item:hover,
-        .contact-item.active {
-            background: #e4e6eb;
-            color: var(--text-primary);
-        }
-
-        .contact-avatar {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            background: #e4e6eb;
-            color: var(--text-primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 16px;
-            box-shadow: var(--shadow);
-        }
-
-        .contact-info {
-            flex: 1;
-        }
-
-        .contact-name {
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-
-        .contact-last-msg {
-            font-size: 13px;
-            color: var(--text-secondary);
-            overflow: hidden;
-            white-space: nowrap;
-            text-overflow: ellipsis;
-            max-width: 200px;
-        }
-
-        .chat-window {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-        }
-
-        .chat-header {
-            padding: 20px 25px;
-            background: var(--surface);
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .chat-header .contact-avatar {
-            margin: 0;
-        }
-
-        .chat-header-info h4 {
-            font-size: 18px;
-            margin-bottom: 4px;
-            font-weight: 600;
-        }
-
-        .chat-header-info p {
-            font-size: 13px;
-            color: var(--text-secondary);
-        }
-
-        .chat-messages {
-            flex: 1;
-            overflow-y: auto;
-            padding: 25px;
-            background: #e4e6eb;
-            scroll-behavior: smooth;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        .chat-messages::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .chat-messages::-webkit-scrollbar-track {
-            background: rgba(0, 0, 0, 0.05);
-        }
-
-        .chat-messages::-webkit-scrollbar-thumb {
-            background: var(--primary);
-            border-radius: 3px;
-        }
-
-        .message {
-            margin-bottom: 20px;
-            display: flex;
-            align-items: flex-end;
-            gap: 12px;
-            max-width: 75%;
-            position: relative;
-        }
-
-        .message.sent {
-            margin-left: auto;
-            flex-direction: row-reverse;
-        }
-
-        .message-bubble {
-            padding: 10px 15px;
-            border-radius: 18px;
-            max-width: 100%;
-            word-wrap: break-word;
-            position: relative;
-            transition: var(--transition);
-        }
-
-        .message-bubble:hover {
-            transform: scale(1.02);
-        }
-
-        .message.sent .message-bubble {
-            background: #1877f2;
-            color: white;
-            border-bottom-right-radius: 0;
-        }
-
-        .message.received .message-bubble {
-            background: #ffffff;
-            color: black;
-            border-bottom-left-radius: 0;
-        }
-
-        .message-time {
-            font-size: 11px;
-            color: var(--text-secondary);
-            margin-left: 8px;
-            opacity: 0.7;
-        }
-
-        .chat-input-container {
-            padding: 20px 25px;
-            background: var(--surface);
-            border-top: 1px solid var(--border);
-            display: flex;
-            gap: 12px;
-            align-items: center;
-            position: sticky;
-            bottom: 0;
-            z-index: 1;
-        }
-
-        .chat-input {
-            flex: 1;
-            padding: 14px 18px;
-            border: 1px solid var(--border);
-            border-radius: 25px;
-            background: #f0f2f5;
-            color: var(--text-primary);
-            font-size: 15px;
-            transition: var(--transition);
-        }
-
-        .chat-input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(24, 119, 242, 0.1);
-        }
-
-        .send-btn {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            background: transparent;
-            color: var(--primary);
-            border: none;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: var(--transition);
-            box-shadow: none;
-        }
-
-        .send-btn:hover {
-            background: #e4e6eb;
-            transform: scale(1.1);
-        }
-
-        .send-btn:disabled {
-            background: transparent;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .no-chat-selected {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: var(--text-secondary);
-            font-style: italic;
-            text-align: center;
-            padding: 40px;
-        }
-
-        .no-contacts {
-            text-align: center;
-            padding: 50px 20px;
-            color: var(--text-secondary);
-        }
-
         .loading {
             text-align: center;
             padding: 30px;
@@ -1167,675 +910,41 @@
             box-shadow: var(--shadow-hover);
         }
         
-        /* Disclaimer Styling */
-        .disclaimer-box {
-            margin-top: 35px;
-            padding: 20px;
-            border: 1px solid rgba(255, 186, 0, 0.3);
-            border-radius: var(--radius);
-            background: rgba(255, 186, 0, 0.05);
-            color: var(--warning);
-            font-size: 14px;
-            box-shadow: 0 4px 20px rgba(255, 186, 0, 0.1);
-        }
-        
-        .disclaimer-box p {
-            margin-bottom: 8px;
-            opacity: 0.9;
-        }
-        
-        .disclaimer-box strong {
-            color: var(--primary);
-        }
-
-        /* NEW SOCIAL MEDIA STYLES */
-        
-        /* Profile Section */
-        .profile-container {
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
-        }
-        
-        .profile-header {
-            background: var(--surface);
-            border-radius: var(--radius);
-            padding: 30px;
-            box-shadow: var(--shadow);
-            display: flex;
-            gap: 25px;
-            align-items: center;
-            border: 1px solid var(--border);
-        }
-        
-        .profile-avatar {
-            width: 140px;
-            height: 140px;
-            border-radius: 50%;
-            background: #e4e6eb;
-            color: var(--text-primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 56px;
-            border: 6px solid var(--primary);
-            box-shadow: var(--shadow-hover);
-            transition: var(--transition);
-        }
-        
-        .profile-avatar:hover {
-            transform: scale(1.05);
-        }
-        
-        .profile-info {
-            flex: 1;
-        }
-        
-        .profile-name {
-            font-size: 32px;
-            font-weight: 800;
-            margin-bottom: 8px;
-            color: var(--text-primary);
-        }
-        
-        .profile-bio {
-            color: var(--text-secondary);
-            margin-bottom: 20px;
-            font-size: 16px;
-            line-height: 1.6;
-            opacity: 0.9;
-        }
-        
-        .profile-stats {
-            display: flex;
-            gap: 25px;
-        }
-        
-        .profile-stat {
-            text-align: center;
-            padding: 15px;
-            background: #f0f2f5;
-            border-radius: var(--radius);
-            transition: var(--transition);
-        }
-        
-        .profile-stat:hover {
-            background: #e4e6eb;
-        }
-        
-        .stat-value {
-            font-size: 24px;
-            font-weight: 800;
-            color: var(--text-primary);
-        }
-        
-        .stat-label {
-            font-size: 13px;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        
-        .profile-actions {
-            display: flex;
-            gap: 15px;
-        }
-        
-        /* Posts Section */
-        .posts-container {
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
-        }
-        
-        .post-card {
-            background: var(--surface);
-            border-radius: var(--radius);
-            padding: 25px;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border);
-            transition: var(--transition);
-            overflow: hidden;
-        }
-        
-        .post-header {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 20px;
-            position: relative;
-        }
-        
-        .post-avatar {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            background: #e4e6eb;
-            color: var(--text-primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 18px;
-            box-shadow: var(--shadow);
-        }
-        
-        .post-user-info {
-            flex: 1;
-        }
-        
-        .post-username {
-            font-weight: 700;
-            margin-bottom: 4px;
-            color: var(--text-primary);
-        }
-        
-        .post-time {
-            font-size: 13px;
-            color: var(--text-secondary);
-        }
-        
-        .post-content {
-            margin-bottom: 20px;
-            background: #f0f2f5;
-            padding: 20px;
-            border-radius: var(--radius);
-            font-size: 16px;
-            line-height: 1.6;
-            border: 1px solid var(--border);
-            transition: var(--transition);
-        }
-        
-        .post-content:hover {
-            background: #e4e6eb;
-        }
-        
-        .post-actions {
-            display: flex;
-            gap: 20px;
-            border-top: 1px solid var(--border);
-            padding-top: 20px;
-        }
-        
-        .post-action {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-            color: var(--text-secondary);
-            transition: var(--transition);
-            padding: 8px 12px;
-            border-radius: 20px;
-        }
-        
-        .post-action:hover {
-            color: var(--primary);
-            background: #e4e6eb;
-            transform: translateY(-1px);
-        }
-        
-        .post-action.active {
-            color: var(--primary);
-            background: #e4e6eb;
-        }
-
-        /* Comments Section */
-        .comments-section {
+        /* Terms and Conditions Styling */
+        .terms-container {
             margin-top: 20px;
-            border-top: 1px solid var(--border);
-            padding-top: 20px;
-            display: none;
-        }
-
-        .comment-input-container {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        .comment-input {
-            flex: 1;
-            padding: 12px 16px;
-            border: 1px solid var(--border);
-            border-radius: 25px;
-            background: #f0f2f5;
-            color: var(--text-primary);
-            font-size: 15px;
-            transition: var(--transition);
-        }
-
-        .comment-input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(24, 119, 242, 0.1);
-        }
-
-        .add-comment-btn {
-            padding: 12px 20px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 25px;
-            cursor: pointer;
-            font-size: 15px;
-            font-weight: 600;
-            transition: var(--transition);
-        }
-
-        .add-comment-btn:hover {
-            transform: translateY(-1px);
-        }
-
-        .comment-item {
-            background: #f0f2f5;
             padding: 15px;
-            border-radius: var(--radius);
-            margin-bottom: 15px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
             border: 1px solid var(--border);
-            transition: var(--transition);
+            border-radius: var(--radius);
+            background: #f9f9f9;
+            max-height: 150px;
+            overflow-y: auto;
         }
-
-        .comment-item:hover {
-            background: #e4e6eb;
-        }
-
-        .comment-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 8px;
-        }
-
-        .comment-avatar {
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            background: #e4e6eb;
-            color: var(--text-primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            font-weight: bold;
-        }
-
-        .comment-author {
-            font-weight: 700;
-            font-size: 15px;
-            color: var(--text-primary);
-        }
-
-        .comment-time {
-            font-size: 12px;
-            color: var(--text-secondary);
-            margin-left: auto;
-        }
-
-        .comment-content {
-            font-size: 15px;
+        
+        .terms-container h4 {
             margin-bottom: 10px;
-            line-height: 1.5;
-        }
-
-        .comment-actions {
-            display: flex;
-            gap: 15px;
-            font-size: 13px;
-        }
-
-        .comment-action {
-            cursor: pointer;
-            color: var(--text-secondary);
-            transition: var(--transition);
-            padding: 5px 8px;
-            border-radius: 15px;
-        }
-
-        .comment-action:hover {
             color: var(--primary);
-            background: #e4e6eb;
+            font-size: 16px;
         }
-
-        .replies-container {
-            margin-left: 45px;
+        
+        .terms-container p {
+            font-size: 13px;
+            line-height: 1.4;
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+        }
+        
+        .terms-checkbox {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
             margin-top: 15px;
-            padding-left: 15px;
-            border-left: 2px solid var(--border);
-        }
-
-        .reply-input-container {
-            display: flex;
-            gap: 8px;
-            margin-top: 8px;
-        }
-
-        .reply-input {
-            flex: 1;
-            padding: 8px 12px;
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            background: #f0f2f5;
-            color: var(--text-primary);
-            font-size: 13px;
-        }
-
-        .reply-btn {
-            padding: 8px 12px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 13px;
-            transition: var(--transition);
-        }
-
-        .reply-btn:hover {
-            background: #0d65d8;
-        }
-
-        .reply-item {
-            background: #f0f2f5;
-            padding: 10px 12px;
-            border-radius: 8px;
-            margin-bottom: 8px;
             font-size: 14px;
-            border: 1px solid var(--border);
-        }
-
-        /* Share Menu */
-        .share-menu {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: var(--surface);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow-hover);
-            z-index: 3000;
-            display: none;
-            min-width: 220px;
-            border: 1px solid var(--border);
-        }
-
-        .share-menu ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .share-menu li {
-            padding: 18px 25px;
-            cursor: pointer;
-            border-bottom: 1px solid var(--border);
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-weight: 500;
-        }
-
-        .share-menu li:hover {
-            background: #e4e6eb;
-            color: var(--text-primary);
-            padding-left: 35px;
-        }
-
-        .share-menu li:last-child {
-            border-bottom: none;
-        }
-
-        /* Stories Section */
-        .stories-container {
-            display: flex;
-            gap: 18px;
-            overflow-x: auto;
-            padding: 15px 0;
-            margin-bottom: 25px;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-        }
-
-        .stories-container::-webkit-scrollbar {
-            display: none;
         }
         
-        .story-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            cursor: pointer;
-            transition: var(--transition);
-            min-width: 80px;
-        }
-        
-        .story-item:hover {
-            transform: scale(1.05);
-        }
-        
-        .story-avatar {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background: #e4e6eb;
-            color: var(--text-primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 24px;
-            border: 4px solid var(--primary);
-            margin-bottom: 8px;
-            box-shadow: var(--shadow);
-            transition: var(--transition);
-        }
-        
-        .story-username {
-            font-size: 13px;
-            color: var(--text-secondary);
-            max-width: 80px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            text-align: center;
-        }
-        
-        .story-add {
-            border: 3px dashed var(--border);
-            background: transparent;
-            color: var(--text-secondary);
-            font-size: 28px;
-        }
-        
-        .story-add:hover {
-            border-color: var(--primary);
-            color: var(--primary);
-        }
-        
-        .story-card {
-            background: var(--surface);
-            border-radius: var(--radius);
-            padding: 25px;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border);
-            margin-bottom: 25px;
-        }
-
-        .story-content {
-            background: #f0f2f5;
-            padding: 20px;
-            border-radius: var(--radius);
-            font-size: 16px;
-            line-height: 1.6;
-            border: 1px solid var(--border);
-        }
-        
-        /* Friends Section */
-        .friends-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-            gap: 25px;
-        }
-        
-        .friend-card {
-            background: var(--surface);
-            border-radius: var(--radius);
-            padding: 25px;
-            box-shadow: var(--shadow);
-            text-align: center;
-            transition: var(--transition);
-            border: 1px solid var(--border);
-        }
-        
-        .friend-card:hover {
-            transform: translateY(-5px);
-        }
-        
-        .friend-avatar {
-            width: 90px;
-            height: 90px;
-            border-radius: 50%;
-            background: #e4e6eb;
-            color: var(--text-primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 28px;
-            margin: 0 auto 20px;
-            box-shadow: var(--shadow);
-        }
-        
-        .friend-name {
-            font-weight: 700;
-            margin-bottom: 8px;
-            color: var(--text-primary);
-        }
-        
-        .friend-username {
-            color: var(--text-secondary);
-            font-size: 15px;
-            margin-bottom: 20px;
-            opacity: 0.8;
-        }
-        
-        .friend-actions {
-            display: flex;
-            gap: 8px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-        
-        /* Notifications */
-        .notifications-container {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        
-        .notification-item {
-            background: var(--surface);
-            border-radius: var(--radius);
-            padding: 20px;
-            box-shadow: var(--shadow);
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            transition: var(--transition);
-            border: 1px solid var(--border);
-        }
-        
-        .notification-item:hover {
-            transform: translateX(5px);
-        }
-        
-        .notification-avatar {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            background: #e4e6eb;
-            color: var(--text-primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 18px;
-        }
-        
-        .notification-content {
-            flex: 1;
-        }
-        
-        .notification-text {
-            margin-bottom: 6px;
-            font-weight: 500;
-        }
-        
-        .notification-time {
-            font-size: 13px;
-            color: var(--text-secondary);
-        }
-        
-        .notification-actions {
-            display: flex;
-            gap: 8px;
-        }
-        
-        /* Search Bar */
-        .search-container {
-            margin-bottom: 25px;
-        }
-        
-        .search-bar {
-            display: flex;
-            gap: 12px;
-            background: #f0f2f5;
-            border-radius: var(--radius);
-            padding: 5px;
-            border: 1px solid var(--border);
-        }
-        
-        .search-input {
-            flex: 1;
-            padding: 14px 18px;
-            border: none;
-            border-radius: calc(var(--radius) - 5px);
-            background: transparent;
-            color: var(--text-primary);
-            font-size: 16px;
-        }
-        
-        .search-input:focus {
-            outline: none;
-            box-shadow: none;
-        }
-        
-        /* Online Status */
-        .online-indicator {
-            width: 12px;
-            height: 12px;
-            border-radius: 50%;
-            background: var(--success);
-            position: absolute;
-            bottom: 0;
-            right: 0;
-            border: 3px solid var(--surface);
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(66, 183, 42, 0.7); }
-            70% { box-shadow: 0 0 0 10px rgba(66, 183, 42, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(66, 183, 42, 0); }
-        }
-        
-        .avatar-container {
-            position: relative;
-            display: inline-block;
+        .terms-checkbox input[type="checkbox"] {
+            margin-top: 2px;
+            accent-color: var(--primary);
         }
 
         /* Branding Section Styles */
@@ -1978,10 +1087,6 @@
             #pageTitle {
                 text-align: left;
                 flex-grow: 0;
-            }
-
-            .messaging-container {
-                height: 75vh;
             }
         }
         
@@ -2128,86 +1233,6 @@
             #feesSection .table-container td:nth-of-type(6):before { content: "Date Paid"; }
             #feesSection .table-container td:nth-of-type(7):before { content: "Actions"; }
 
-            .messaging-container {
-                flex-direction: column;
-                height: 75vh;
-            }
-
-            .contacts-list {
-                width: 100%;
-                max-height: 250px;
-            }
-            
-            /* Mobile Social Media Styles */
-            .profile-header {
-                flex-direction: column;
-                text-align: center;
-                gap: 20px;
-            }
-            
-            .profile-stats {
-                justify-content: center;
-                gap: 15px;
-            }
-            
-            .profile-actions {
-                justify-content: center;
-            }
-            
-            .friends-container {
-                grid-template-columns: 1fr;
-            }
-            
-            /* Fix chat input on mobile */
-            .chat-input-container {
-                position: fixed;
-                bottom: 0;
-                left: 0;
-                width: 100%;
-                padding: 15px;
-                box-sizing: border-box;
-                flex-wrap: nowrap;
-                background: var(--surface);
-                border-top: 1px solid var(--border);
-            }
-
-            .chat-input {
-                min-width: 0;
-            }
-
-            .send-btn {
-                flex-shrink: 0;
-            }
-
-            /* Fix search bar on mobile */
-            .search-bar {
-                flex-direction: row;
-                align-items: center;
-            }
-
-            .search-input {
-                min-width: 0;
-            }
-
-            .btn {
-                flex-shrink: 0;
-                padding: 12px 20px;
-                font-size: 14px;
-            }
-
-            /* Mobile Comments */
-            .replies-container {
-                margin-left: 25px;
-            }
-
-            .comment-input-container, .reply-input-container {
-                flex-direction: column;
-            }
-
-            .comment-input, .reply-input {
-                margin-bottom: 10px;
-            }
-
             /* Auth form mobile */
             .auth-form {
                 padding: 30px 20px;
@@ -2223,57 +1248,6 @@
                 gap: 20px;
             }
         }
-
-        /* Chat Icon */
-        .chat-icon-btn {
-            background: var(--surface);
-            color: var(--text-primary);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            box-shadow: var(--shadow);
-            cursor: pointer;
-            border: none;
-            transition: var(--transition);
-            margin-left: 10px;
-        }
-
-        .chat-icon-btn:hover {
-            transform: scale(1.1);
-        }
-
-        /* Floating Messages Section */
-        #messagesSection {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background: var(--background);
-            border-radius: var(--radius);
-            box-shadow: var(--shadow-hover);
-            z-index: 1000;
-            overflow: hidden;
-        }
-
-        @media (max-width: 768px) {
-            #messagesSection {
-                width: 100vw;
-                height: 100vh;
-                bottom: 0;
-                right: 0;
-            }
-
-            .chat-icon {
-                top: 10px;
-                right: 10px;
-            }
-        }
     </style>
 </head>
 <body>
@@ -2281,7 +1255,7 @@
 <div class="auth-form shadow-md">
 <div class="auth-header">
 <h1><i class="fas fa-users"></i> Popcorn</h1>
-<p>Complete Social Media Platform</p>
+<p>EMS</p>
 </div>
 <div class="auth-tabs">
 <div class="auth-tab active" id="loginTab">Login</div>
@@ -2327,14 +1301,18 @@
 <label for="registerBio"><i class="fas fa-pen"></i> Bio</label>
 <textarea class="form-control" id="registerBio" placeholder="Tell us about yourself" rows="3"></textarea>
 </div>
+<div class="terms-container">
+<h4>Terms and Conditions</h4>
+<p><strong>English:</strong> This education management application uses Firebase Realtime Database for all data (users, students, fees, attendance). Your data is stored securely in the cloud. By registering, you agree to our privacy policy and terms of service.</p>
+<p><strong>اردو:</strong> یہ ایجوکیشن مینجمنٹ ایپلیکیشن تمام ڈیٹا (صارفین، طلباء، فیس، حاضری) کے لیے Firebase Realtime Database استعمال کرتی ہے۔ آپ کا ڈیٹا کلاؤڈ میں محفوظ طریقے سے محفوظ ہوتا ہے۔ رجسٹریشن کرکے آپ ہماری پرائیویسی پالیسی اور شرائط و ضوابط سے اتفاق کرتے ہیں۔</p>
+</div>
+<div class="form-group terms-checkbox">
+<input type="checkbox" id="acceptTerms" required />
+<label for="acceptTerms">I accept the terms and conditions</label>
+</div>
 <button class="btn btn-success" type="submit">Create Account</button>
 </form>
 <div id="authMessage" style="margin-top: 20px;"></div>
-<div class="disclaimer-box">
-<p><strong>⚠️ Data Storage Disclaimer:</strong></p>
-<p><strong>English:</strong> This social media application uses Firebase Realtime Database for all data (users, posts, messages, stories). Your data is stored securely in the cloud.</p>
-<p><strong>اردو:</strong> یہ سوشل میڈیا ایپلیکیشن تمام ڈیٹا (صارفین، پوسٹس، میسجز، سٹوریز) کے لیے Firebase Realtime Database استعمال کرتی ہے۔ آپ کا ڈیٹا کلاؤڈ میں محفوظ طریقے سے محفوظ ہوتا ہے。</p>
-</div>
 </div>
 </div>
 <div class="app-container" id="appSection">
@@ -2349,25 +1327,7 @@
 </button>
 </div>
 <ul class="sidebar-menu">
-<li class="active" data-section="dashboard">
-<i class="fas fa-home"></i> News Feed
-                </li>
-<li data-section="profile">
-<i class="fas fa-user"></i> My Profile
-                </li>
-<li data-section="friends">
-<i class="fas fa-user-friends"></i> Friends
-                </li>
-<li data-section="stories">
-<i class="fas fa-history"></i> Stories
-                </li>
-<li data-section="notifications">
-<i class="fas fa-bell"></i> Notifications
-                </li>
-<li data-section="search">
-<i class="fas fa-search"></i> Search
-                </li>
-<li data-section="emsDashboard">
+<li class="active" data-section="emsDashboard">
 <i class="fas fa-tachometer-alt"></i> EMS Dashboard
                 </li>
 <li data-section="students">
@@ -2395,159 +1355,16 @@
 <i class="fas fa-bars"></i>
 </button>
 </div>
-<h1 id="pageTitle">News Feed</h1>
+<h1 id="pageTitle">EMS Dashboard</h1>
 <div class="user-info">
 <div class="user-avatar" id="userAvatar">U</div>
 <div>
 <div>Welcome, <strong id="loggedInUser">User</strong></div>
 <button class="btn btn-danger btn-sm" id="logoutBtn">Logout</button>
-<button class="chat-icon-btn" id="chatIcon"><i class="fas fa-comment-dots"></i></button>
 </div>
 </div>
 </div>
-<div class="content-section active" id="dashboardSection">
-<div class="section-header">
-<h2>News Feed</h2>
-<p>Latest updates from your friends</p>
-</div>
-<div class="stories-container" id="storiesFeed">
-<div class="story-item">
-<div class="story-avatar story-add">
-<i class="fas fa-plus"></i>
-</div>
-<div class="story-username">Create story</div>
-</div>
-</div>
-<div class="posts-container" id="postsFeed">
-<div class="loading">Loading posts...</div>
-</div>
-</div>
-<div class="content-section" id="profileSection">
-<div class="section-header">
-<h2>My Profile</h2>
-<p>Manage your profile and settings</p>
-</div>
-<div class="profile-container">
-<div class="profile-header">
-<div class="profile-avatar" id="profileAvatar">U</div>
-<div class="profile-info">
-<h1 class="profile-name" id="profileName">User Name</h1>
-<p class="profile-bio" id="profileBio">This is my bio</p>
-<div class="profile-stats">
-<div class="profile-stat">
-<div class="stat-value" id="profilePosts">0</div>
-<div class="stat-label">Posts</div>
-</div>
-<div class="profile-stat">
-<div class="stat-value" id="profileFriends">0</div>
-<div class="stat-label">Friends</div>
-</div>
-<div class="profile-stat">
-<div class="stat-value" id="profileFollowers">0</div>
-<div class="stat-label">Followers</div>
-</div>
-</div>
-</div>
-<div class="profile-actions">
-<button class="btn" id="editProfileBtn">Edit Profile</button>
-<button class="btn btn-success" id="createPostBtn">Create Post</button>
-</div>
-</div>
-<div class="posts-container" id="profilePostsContainer">
-<div class="loading">Loading your posts...</div>
-</div>
-</div>
-</div>
-<div class="content-section" id="friendsSection">
-<div class="section-header">
-<h2>Friends</h2>
-<p>Manage your friends and connections</p>
-</div>
-<div class="search-container">
-<div class="search-bar">
-<input class="search-input" id="friendSearch" placeholder="Search for friends..." type="text"/>
-<button class="btn" id="searchFriendBtn">Search</button>
-</div>
-</div>
-<div class="friends-container" id="friendsList">
-<div class="loading">Loading friends...</div>
-</div>
-<div class="section-header" style="margin-top: 45px;">
-<h3>Friend Requests</h3>
-</div>
-<div class="friends-container" id="friendRequestsList">
-<div class="loading">Loading friend requests...</div>
-</div>
-</div>
-
-<div class="content-section" id="storiesSection">
-<div class="section-header">
-<h2>Stories</h2>
-<p>Share moments that disappear after 24 hours</p>
-</div>
-<div class="stories-container" id="storiesList">
-<div class="story-item">
-<div class="story-avatar story-add">
-<i class="fas fa-plus"></i>
-</div>
-<div class="story-username">Your Story</div>
-</div>
-</div>
-<div class="form-container shadow-md">
-<h3>Create New Story</h3>
-<form id="storyForm">
-<div class="form-group">
-<label for="storyText">Story Text</label>
-<textarea class="form-control" id="storyText" placeholder="What's happening?" rows="3"></textarea>
-</div>
-<button class="btn" type="submit">Add to Story</button>
-</form>
-</div>
-</div>
-<div class="content-section" id="notificationsSection">
-<div class="section-header">
-<h2>Notifications</h2>
-<p>Your recent activity and updates</p>
-</div>
-<div class="notifications-container" id="notificationsList">
-<div class="loading">Loading notifications...</div>
-</div>
-</div>
-<div class="content-section" id="searchSection">
-<div class="section-header">
-<h2>Search</h2>
-<p>Find people and content</p>
-</div>
-<div class="search-container">
-<div class="search-bar">
-<input class="search-input" id="globalSearch" placeholder="Search for people, posts, or hashtags..." type="text"/>
-<button class="btn" id="globalSearchBtn">Search</button>
-</div>
-</div>
-<div class="friends-container" id="searchResults">
-<div class="no-contacts">
-<i class="fas fa-search" style="font-size: 48px; color: var(--text-secondary); margin-bottom: 10px;"></i>
-<p>Enter a search term to find people and content.</p>
-</div>
-</div>
-</div>
-<div class="content-section" id="messagesSection">
-<div class="section-header">
-<h2>Chats</h2>
-<p>Chat with your friends</p>
-</div>
-<div class="messaging-container">
-<div class="contacts-list" id="contactsList"></div>
-<div class="chat-window" id="chatWindow">
-<div class="no-chat-selected">
-<i class="fas fa-comment-dots" style="font-size: 48px; color: var(--text-secondary); margin-bottom: 10px;"></i>
-<p>Select a friend to start chatting.</p>
-</div>
-</div>
-</div>
-</div>
-<!-- EMS Sections -->
-<div class="content-section" id="emsDashboardSection">
+<div class="content-section active" id="emsDashboardSection">
 <div class="section-header">
 <h2>EMS Dashboard Overview</h2>
 <p>Welcome to your education management dashboard</p>
@@ -2858,93 +1675,6 @@
 </div>
 </div>
 </div>
-</div>
-<!-- Share Menu -->
-<div class="share-menu" id="shareMenu">
-<ul>
-<li onclick="copyPostLink(currentPostId)"><i class="fas fa-link"></i> Copy Link</li>
-<li onclick="savePost(currentPostId)"><i class="fas fa-bookmark"></i> Save Post</li>
-<li onclick="shareToWhatsApp(currentPostId)"><i class="fab fa-whatsapp"></i> Share to WhatsApp</li>
-<li onclick="closeShareMenu()"><i class="fas fa-times"></i> Cancel</li>
-</ul>
-</div>
-<!-- Create Post Modal -->
-<div class="modal" id="postModal">
-<div class="modal-content">
-<div class="modal-header">
-<h3><i class="fas fa-edit"></i> Create Post</h3>
-<span class="close-modal" onclick="closePostModal()">×</span>
-</div>
-<form id="createPostForm">
-<div class="form-group">
-<textarea class="form-control" id="postContent" placeholder="What's on your mind?" required="" rows="5"></textarea>
-</div>
-<div class="form-group">
-<label for="postMedia">Add Photo/Video (optional)</label>
-<input accept="image/*,video/*" class="form-control" id="postMedia" type="file"/>
-</div>
-<div class="form-group">
-<label for="fontSize">Font Size</label>
-<select class="form-control" id="fontSize">
-<option value="normal">Normal</option>
-<option value="large">Large</option>
-</select>
-</div>
-<div style="display: flex; justify-content: space-between; gap: 12px; margin-top: 25px;">
-<button class="btn btn-danger" onclick="closePostModal()" type="button">Cancel</button>
-<button class="btn btn-success" type="submit">Post</button>
-</div>
-</form>
-</div>
-</div>
-<!-- Edit Profile Modal -->
-<div class="modal" id="profileModal">
-<div class="modal-content">
-<div class="modal-header">
-<h3><i class="fas fa-user-edit"></i> Edit Profile</h3>
-<span class="close-modal" onclick="closeProfileModal()">×</span>
-</div>
-<form id="editProfileForm">
-<div class="form-group">
-<label for="editFullName">Full Name</label>
-<input class="form-control" id="editFullName" required="" type="text"/>
-</div>
-<div class="form-group">
-<label for="editUsername">Username</label>
-<input class="form-control" id="editUsername" required="" type="text"/>
-</div>
-<div class="form-group">
-<label for="editBio">Bio</label>
-<textarea class="form-control" id="editBio" rows="3"></textarea>
-</div>
-<div class="form-group">
-<label for="editAvatar">Avatar Initial</label>
-<input class="form-control" id="editAvatar" maxlength="1" required="" type="text"/>
-</div>
-<div style="display: flex; justify-content: space-between; gap: 12px; margin-top: 25px;">
-<button class="btn btn-danger" onclick="closeProfileModal()" type="button">Cancel</button>
-<button class="btn btn-success" type="submit">Save Changes</button>
-</div>
-</form>
-</div>
-</div>
-<!-- Story Viewer Modal -->
-<div class="modal" id="storyModal">
-<div class="modal-content" style="width: 550px; max-width: 90%;">
-<div class="modal-header">
-<h3 id="storyUsername"><i class="fas fa-history"></i> Story</h3>
-<span class="close-modal" onclick="closeStoryModal()">×</span>
-</div>
-<div class="story-content" id="storyContent"></div>
-<div class="comments-section" id="storyRepliesSection">
-<div class="comment-input-container">
-<input class="comment-input" id="storyReplyInput" placeholder="Reply to this story..." type="text"/>
-<button class="add-comment-btn" onclick="addStoryReply()">Reply</button>
-</div>
-<div id="storyReplies"></div>
-</div>
-</div>
-</div>
 <div class="modal" id="pinModal">
 <div class="modal-content">
 <div class="modal-header">
@@ -2962,10 +1692,6 @@
 </div>
 </div>
 <script>
-        // Global variables for share menu
-        let currentPostId = null;
-        let currentStoryId = null;
-
         // FIXED Firebase Configuration - Database URL Updated
         const firebaseConfig = {
             apiKey: "AIzaSyAaM6vNyFpliNAgzujoG4xBDbTGmSB33no",
@@ -2978,17 +1704,14 @@
             databaseURL: "https://ems-by-ali-default-rtdb.asia-southeast1.firebasedatabase.app" // FIXED URL
         };
 
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
+        // Initialize Firebase (FIX: Use Compat Syntax)
+        const app = firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
         const db = firebase.database();
-        const storage = firebase.storage();
+        const storage = firebase.storage(); // Note: Storage is not fully implemented in the code, but the variable is set
 
         // Application state
         let currentUser = null;
-        let users = {};
-        let currentChatUser = null;
-        let currentMessagesRef = null;
 
         // EMS state
         let students = {};
@@ -3001,24 +1724,13 @@
         const defaultSchoolName = "Powered by Ali ® 2025 03091539086";
         const defaultSchoolPhone = "03091539086";
 
-        // Listener flags
-        let newsFeedListenerAttached = false;
-        let profilePostsListenerAttached = false;
-        let friendsListenerAttached = false;
-        let friendRequestsListenerAttached = false;
-        let notificationsListenerAttached = false;
-        let storiesListenerAttached = false;
-        let messagesContactsListenerAttached = false;
-        const attachedPostComments = new Set();
-        const attachedReplies = new Set();
-
         // Sidebar Elements
         const sidebar = document.getElementById('sidebar');
         const backdrop = document.getElementById('sidebarBackdrop');
 
         // Initialize the application
         document.addEventListener('DOMContentLoaded', function() {
-            // Check if user is signed in
+            // Check if user is signed in (FIX: Use compat onAuthStateChanged)
             auth.onAuthStateChanged((user) => {
                 if (user) {
                     currentUser = {
@@ -3026,7 +1738,7 @@
                         email: user.email
                     };
                     
-                    // Load user data from DB
+                    // Load user data from DB (FIX: Use compat ref and on)
                     db.ref('users/' + currentUser.uid).on('value', (snap) => {
                         if (snap.exists()) {
                             const data = snap.val();
@@ -3039,7 +1751,7 @@
                             currentUser.avatar = data.avatar || currentUser.fullName.charAt(0).toUpperCase();
                             currentUser.createdAt = data.createdAt;
                             currentUser.pin = data.pin;
-                            currentUser.brandingUnlocked = data.brandingUnlocked || false; // Fixed: Fetch brandingUnlocked
+                            currentUser.brandingUnlocked = data.brandingUnlocked || false;
                             const dbToken = data.sessionToken;
                             const localToken = localStorage.getItem('sessionToken');
                             if (dbToken && localToken !== dbToken) {
@@ -3053,6 +1765,7 @@
                     });
                 } else {
                     currentUser = null;
+                    showAuth();
                 }
             });
 
@@ -3102,29 +1815,6 @@
                 });
             });
             
-            // Post creation
-            document.getElementById('createPostBtn').addEventListener('click', openPostModal);
-            document.getElementById('createPostForm').addEventListener('submit', handleCreatePost);
-            
-            // Profile editing
-            document.getElementById('editProfileBtn').addEventListener('click', openProfileModal);
-            document.getElementById('editProfileForm').addEventListener('submit', handleEditProfile);
-            
-            // Friend search
-            document.getElementById('searchFriendBtn').addEventListener('click', handleFriendSearch);
-            document.getElementById('friendSearch').addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') handleFriendSearch();
-            });
-            
-            // Global search
-            document.getElementById('globalSearchBtn').addEventListener('click', handleGlobalSearch);
-            document.getElementById('globalSearch').addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') handleGlobalSearch();
-            });
-            
-            // Story creation
-            document.getElementById('storyForm').addEventListener('submit', handleCreateStory);
-            
             // EMS event listeners
             if (document.getElementById('studentForm')) document.getElementById('studentForm').addEventListener('submit', handleAddStudent);
             if (document.getElementById('feeForm')) document.getElementById('feeForm').addEventListener('submit', handleFeeCollection);
@@ -3132,22 +1822,6 @@
             if (document.getElementById('feeMonth')) document.getElementById('feeMonth').addEventListener('change', updateFeeInfo);
             if (document.getElementById('attendanceForm')) document.getElementById('attendanceForm').addEventListener('submit', handleAttendance);
             if (document.getElementById('attendanceDate')) document.getElementById('attendanceDate').addEventListener('change', loadAttendanceForm);
-
-            // Chat icon toggle
-            document.getElementById('chatIcon').addEventListener('click', toggleMessages);
-        }
-
-        // Toggle messages floating window
-        function toggleMessages() {
-            const msgSec = document.getElementById('messagesSection');
-            if (msgSec.style.display === 'none' || msgSec.style.display === '') {
-                msgSec.style.display = 'block';
-                if (!messagesContactsListenerAttached) {
-                    loadMessagesContacts();
-                }
-            } else {
-                msgSec.style.display = 'none';
-            }
         }
 
         // Sidebar Control functions
@@ -3162,6 +1836,11 @@
         }
 
         // Authentication functions
+        function showAuth() {
+            document.getElementById('authSection').style.display = 'flex';
+            document.getElementById('appSection').style.display = 'none';
+        }
+
         function switchAuthTab(tab) {
             document.getElementById('loginTab').classList.toggle('active', tab === 'login');
             document.getElementById('registerTab').classList.toggle('active', tab === 'register');
@@ -3181,9 +1860,11 @@
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
             
+            // FIX: Use compat signInWithEmailAndPassword
             auth.signInWithEmailAndPassword(email, password)
                 .then((userCredential) => {
                     const sessionToken = generateId();
+                    // FIX: Use compat set
                     db.ref('users/' + userCredential.user.uid + '/sessionToken').set(sessionToken);
                     localStorage.setItem('sessionToken', sessionToken);
                     showAuthMessage('Login successful! Redirecting to dashboard...', 'success');
@@ -3195,6 +1876,11 @@
 
         function handleRegister(e) {
             e.preventDefault();
+            const acceptTerms = document.getElementById('acceptTerms').checked;
+            if (!acceptTerms) {
+                showAuthMessage('You must accept the terms and conditions to register.', 'error');
+                return;
+            }
             const username = document.getElementById('registerUsername').value;
             const fullName = document.getElementById('registerFullName').value;
             const phone = document.getElementById('registerPhone').value;
@@ -3213,49 +1899,48 @@
                 return;
             }
             
-            // Check if username already exists
-            db.ref('users').orderByChild('username').equalTo(username).once('value')
-                .then((snapshot) => {
-                    if (snapshot.exists()) {
-                        showAuthMessage('Username already exists. Please choose a different one.', 'error');
-                    } else {
-                        // Create user with email and password
-                        auth.createUserWithEmailAndPassword(email, password)
-                            .then((userCredential) => {
-                                const user = userCredential.user;
-                                
-                                // Store user data in Firebase
-                                db.ref('users/' + user.uid).set({
-                                    username,
-                                    usernameLower: username.toLowerCase(),
-                                    fullName,
-                                    phone,
-                                    email,
-                                    bio,
-                                    avatar: fullName.charAt(0).toUpperCase(),
-                                    createdAt: firebase.database.ServerValue.TIMESTAMP,
-                                    lastSeen: firebase.database.ServerValue.TIMESTAMP,
-                                    pin,
-                                    brandingUnlocked: false,
-                                    schoolName: defaultSchoolName,
-                                    schoolPhone: defaultSchoolPhone
-                                }).then(() => {
-                                    const sessionToken = generateId();
-                                    db.ref('users/' + user.uid + '/sessionToken').set(sessionToken);
-                                    localStorage.setItem('sessionToken', sessionToken);
-                                    showAuthMessage('Registration successful! Loading dashboard...', 'success');
-                                    document.getElementById('registerForm').reset();
-                                }).catch((dbError) => {
-                                    showAuthMessage('Error saving user data: ' + dbError.message, 'error');
-                                });
-                            })
-                            .catch((error) => {
-                                const errorCode = error.code;
-                                const errorMessage = error.message;
-                                showAuthMessage('Error creating account: ' + errorMessage, 'error');
+            // Check if username already exists (FIX: Use compat query and once)
+            db.ref('users').orderByChild('username').equalTo(username).once('value', (snapshot) => {
+                if (snapshot.exists()) {
+                    showAuthMessage('Username already exists. Please choose a different one.', 'error');
+                } else {
+                    // Create user with email and password (FIX: Use compat createUserWithEmailAndPassword)
+                    auth.createUserWithEmailAndPassword(email, password)
+                        .then((userCredential) => {
+                            const user = userCredential.user;
+                            
+                            // Store user data in Firebase (FIX: Use compat ref, set, and ServerValue.TIMESTAMP)
+                            db.ref('users/' + user.uid).set({
+                                username,
+                                usernameLower: username.toLowerCase(),
+                                fullName,
+                                phone,
+                                email,
+                                bio,
+                                avatar: fullName.charAt(0).toUpperCase(),
+                                createdAt: firebase.database.ServerValue.TIMESTAMP,
+                                lastSeen: firebase.database.ServerValue.TIMESTAMP,
+                                pin,
+                                brandingUnlocked: false,
+                                schoolName: defaultSchoolName,
+                                schoolPhone: defaultSchoolPhone
+                            }).then(() => {
+                                const sessionToken = generateId();
+                                db.ref('users/' + user.uid + '/sessionToken').set(sessionToken);
+                                localStorage.setItem('sessionToken', sessionToken);
+                                showAuthMessage('Registration successful! Loading dashboard...', 'success');
+                                document.getElementById('registerForm').reset();
+                            }).catch((dbError) => {
+                                showAuthMessage('Error saving user data: ' + dbError.message, 'error');
                             });
-                    }
-                });
+                        })
+                        .catch((error) => {
+                            const errorCode = error.code;
+                            const errorMessage = error.message;
+                            showAuthMessage('Error creating account: ' + errorMessage, 'error');
+                        });
+                }
+            });
         }
 
         function showAuthMessage(message, type) {
@@ -3265,15 +1950,12 @@
             messageDiv.innerHTML = `<div style="${style}">${message}</div>`;
         }
 
-        // Handle logout with proper cleanup
+        // Handle logout with proper cleanup (FIX: Use compat signOut)
         function handleLogout() {
-            if (currentMessagesRef) {
-                currentMessagesRef.off();
-            }
             
-            // Update last seen timestamp
+            // Update last seen timestamp (FIX: Use compat update and ServerValue.TIMESTAMP)
             if (currentUser) {
-                db.ref('users/' + currentUser.uid + '/lastSeen').set(firebase.database.ServerValue.TIMESTAMP);
+                db.ref('users/' + currentUser.uid).update({lastSeen: firebase.database.ServerValue.TIMESTAMP});
             }
             
             auth.signOut().then(() => {
@@ -3305,12 +1987,9 @@
             fees = {};
             attendance = {};
             currentUser = null;
-            if (currentMessagesRef) {
-                currentMessagesRef.off();
-            }
         }
 
-        // Load user-specific EMS data from Firebase
+        // Load user-specific EMS data from Firebase (FIX: Use compat on)
         function loadUserData() {
             if (!currentUser) return;
 
@@ -3350,37 +2029,11 @@
             document.getElementById('userAvatar').textContent = currentUser.avatar;
             document.getElementById('changePasswordEmail').value = currentUser.email;
             
-            // Update profile section
-            updateProfileSection();
-            
             // Update branding form (locked, show default)
             document.getElementById('schoolName').value = currentUser.schoolName;
             document.getElementById('schoolPhone').value = currentUser.schoolPhone;
             
-            showSection('dashboard');
-            
-            // Load users in real-time
-            db.ref('users').on('value', (snap) => {
-                users = {};
-                snap.forEach((child) => {
-                    users[child.key] = child.val();
-                });
-                if (document.getElementById('messagesSection').style.display === 'block') {
-                    loadMessagesContacts();
-                }
-            });
-            
-            // Set up presence
-            const myPresenceRef = db.ref('users/' + currentUser.uid + '/lastSeen');
-            db.ref('.info/connected').on('value', (snap) => {
-                if (snap.val()) {
-                    myPresenceRef.onDisconnect().set(firebase.database.ServerValue.TIMESTAMP);
-                    myPresenceRef.set(firebase.database.ServerValue.TIMESTAMP);
-                }
-            });
-            setInterval(() => {
-                myPresenceRef.set(firebase.database.ServerValue.TIMESTAMP);
-            }, 60000); // Update every minute
+            showSection('emsDashboard');
         }
 
         function showSection(section) {
@@ -3391,12 +2044,6 @@
             document.getElementById(`${section}Section`).classList.add('active');
             
             const titles = {
-                dashboard: 'Home',
-                profile: 'My Profile',
-                friends: 'Friends',
-                stories: 'Stories',
-                notifications: 'Notifications',
-                search: 'Search',
                 emsDashboard: 'EMS Dashboard Overview',
                 students: 'Student Admission',
                 fees: 'Fee Collection',
@@ -3408,26 +2055,6 @@
             
             if(section === 'branding') {
                 loadBrandingSection();
-            } else if (section === 'dashboard') {
-                loadNewsFeed();
-                loadStories();
-            } else if (section === 'profile') {
-                loadProfilePosts();
-            } else if (section === 'friends') {
-                loadFriends();
-                loadFriendRequests();
-            } else if (section === 'stories') {
-                loadStories();
-            } else if (section === 'notifications') {
-                loadNotifications();
-            } else if (section === 'search') {
-                // Clear search results
-                document.getElementById('searchResults').innerHTML = `
-                    <div class="no-contacts">
-                        <i class="fas fa-search" style="font-size: 48px; color: var(--text-secondary); margin-bottom: 10px;"></i>
-                        <p>Enter a search term to find people and content.</p>
-                    </div>
-                `;
             } else if (section === 'emsDashboard') {
                 updateDashboard();
             } else if (section === 'students') {
@@ -3446,6 +2073,7 @@
         // Settings functions
         function sendPasswordReset() {
             const email = document.getElementById('changePasswordEmail').value;
+            // FIX: Use compat sendPasswordResetEmail
             auth.sendPasswordResetEmail(email).then(() => {
                 alert('Password reset email sent!');
             }).catch(error => {
@@ -3510,6 +2138,7 @@ ${branding}${contact}Thank you! - Created by Sample User`;
             const schoolName = document.getElementById('schoolName').value;
             const schoolPhone = document.getElementById('schoolPhone').value;
 
+            // FIX: Use compat update
             db.ref('users/' + currentUser.uid).update({
                 schoolName,
                 schoolPhone
@@ -3536,1251 +2165,6 @@ ${branding}${contact}Thank you! - Created by Sample User`;
             const adminPhone = '03091539086';
             const message = 'Hello Ali, I want to unlock custom branding for Popcorn app.';
             openWhatsApp(adminPhone, message);
-        }
-
-        // Profile Management
-        function updateProfileSection() {
-            document.getElementById('profileName').textContent = currentUser.fullName;
-            document.getElementById('profileBio').textContent = currentUser.bio || 'No bio yet';
-            document.getElementById('profileAvatar').textContent = currentUser.avatar;
-            
-            // Followers same as friends for simplicity
-            document.getElementById('profileFollowers').textContent = document.getElementById('profileFriends').textContent;
-        }
-
-        function openProfileModal() {
-            document.getElementById('editFullName').value = currentUser.fullName;
-            document.getElementById('editUsername').value = currentUser.username;
-            document.getElementById('editBio').value = currentUser.bio || '';
-            document.getElementById('editAvatar').value = currentUser.avatar;
-            
-            document.getElementById('profileModal').style.display = 'flex';
-            setTimeout(() => document.querySelector('#profileModal .modal-content').classList.add('show'), 10);
-        }
-
-        function closeProfileModal() {
-            document.querySelector('#profileModal .modal-content').classList.remove('show');
-            setTimeout(() => document.getElementById('profileModal').style.display = 'none', 400);
-        }
-
-        function handleEditProfile(e) {
-            e.preventDefault();
-            
-            const fullName = document.getElementById('editFullName').value;
-            const username = document.getElementById('editUsername').value;
-            const bio = document.getElementById('editBio').value;
-            const avatar = document.getElementById('editAvatar').value;
-            
-            // Check if username changed and if it's available
-            if (username !== currentUser.username) {
-                db.ref('users').orderByChild('username').equalTo(username).once('value')
-                    .then((snapshot) => {
-                        if (snapshot.exists()) {
-                            alert('Username already exists. Please choose a different one.');
-                        } else {
-                            updateProfileData(fullName, username, bio, avatar);
-                        }
-                    });
-            } else {
-                updateProfileData(fullName, username, bio, avatar);
-            }
-        }
-
-        function updateProfileData(fullName, username, bio, avatar) {
-            db.ref('users/' + currentUser.uid).update({
-                fullName,
-                username,
-                usernameLower: username.toLowerCase(),
-                bio,
-                avatar: avatar.charAt(0).toUpperCase()
-            }).then(() => {
-                // Update local user data
-                currentUser.fullName = fullName;
-                currentUser.username = username;
-                currentUser.bio = bio;
-                currentUser.avatar = avatar.charAt(0).toUpperCase();
-                
-                // Update UI
-                updateProfileSection();
-                document.getElementById('loggedInUser').textContent = currentUser.fullName;
-                document.getElementById('userAvatar').textContent = currentUser.avatar;
-                
-                closeProfileModal();
-                alert('Profile updated successfully!');
-            }).catch((error) => {
-                alert('Error updating profile: ' + error.message);
-            });
-        }
-
-        // Post Management
-        function openPostModal() {
-            document.getElementById('postContent').value = '';
-            document.getElementById('fontSize').value = 'normal';
-            document.getElementById('postMedia').value = '';
-            document.getElementById('postModal').style.display = 'flex';
-            setTimeout(() => document.querySelector('#postModal .modal-content').classList.add('show'), 10);
-        }
-
-        function closePostModal() {
-            document.querySelector('#postModal .modal-content').classList.remove('show');
-            setTimeout(() => document.getElementById('postModal').style.display = 'none', 400);
-        }
-
-        async function handleCreatePost(e) {
-            e.preventDefault();
-            
-            const content = document.getElementById('postContent').value.trim();
-            const fontSize = document.getElementById('fontSize').value;
-            const file = document.getElementById('postMedia').files[0];
-            
-            if (!content) {
-                alert('Please enter some content for your post');
-                return;
-            }
-            
-            const postId = db.ref('posts').push().key;
-            const newPost = {
-                id: postId,
-                userId: currentUser.uid,
-                username: currentUser.username,
-                fullName: currentUser.fullName,
-                avatar: currentUser.avatar,
-                content: content,
-                fontSize: fontSize,
-                timestamp: firebase.database.ServerValue.TIMESTAMP,
-                likes: 0,
-                comments: 0,
-                shares: 0
-            };
-            
-            if (file) {
-                const storageRef = storage.ref(`posts/${postId}/${file.name}`);
-                await storageRef.put(file);
-                const mediaURL = await storageRef.getDownloadURL();
-                newPost.mediaURL = mediaURL;
-                newPost.mediaType = file.type.startsWith('image') ? 'image' : 'video';
-            }
-            
-            db.ref('posts/' + postId).set(newPost)
-                .then(() => {
-                    closePostModal();
-                    alert('Post created successfully!');
-                    
-                    // Refresh posts feed
-                    if (document.getElementById('dashboardSection').classList.contains('active')) {
-                        loadNewsFeed();
-                    }
-                    if (document.getElementById('profileSection').classList.contains('active')) {
-                        loadProfilePosts();
-                    }
-                })
-                .catch((error) => {
-                    alert('Error creating post: ' + error.message);
-                });
-        }
-
-        function loadNewsFeed() {
-            const postsFeed = document.getElementById('postsFeed');
-            postsFeed.innerHTML = '<div class="loading">Loading posts...</div>';
-            
-            if (!newsFeedListenerAttached) {
-                db.ref('posts').orderByChild('timestamp').on('value', (snapshot) => {
-                    postsFeed.innerHTML = '';
-                    
-                    if (!snapshot.exists()) {
-                        postsFeed.innerHTML = `
-                            <div class="no-contacts">
-                                <i class="fas fa-newspaper" style="font-size: 48px; color: var(--text-secondary); margin-bottom: 10px;"></i>
-                                <p>No posts yet. Be the first to post!</p>
-                            </div>
-                        `;
-                        return;
-                    }
-                    
-                    const posts = [];
-                    snapshot.forEach((child) => {
-                        posts.push(child.val());
-                    });
-                    
-                    // Sort by timestamp (newest first)
-                    posts.sort((a, b) => b.timestamp - a.timestamp);
-                    
-                    posts.forEach(async post => {
-                        const postElement = await createPostElement(post);
-                        postsFeed.appendChild(postElement);
-                    });
-                });
-                newsFeedListenerAttached = true;
-            }
-        }
-
-        function loadProfilePosts() {
-            const profilePostsContainer = document.getElementById('profilePostsContainer');
-            profilePostsContainer.innerHTML = '<div class="loading">Loading your posts...</div>';
-            
-            if (!profilePostsListenerAttached) {
-                db.ref('posts').orderByChild('userId').equalTo(currentUser.uid).on('value', (snapshot) => {
-                    profilePostsContainer.innerHTML = '';
-                    
-                    if (!snapshot.exists()) {
-                        profilePostsContainer.innerHTML = `
-                            <div class="no-contacts">
-                                <i class="fas fa-newspaper" style="font-size: 48px; color: var(--text-secondary); margin-bottom: 10px;"></i>
-                                <p>You haven't posted anything yet.</p>
-                            </div>
-                        `;
-                        return;
-                    }
-                    
-                    const posts = [];
-                    snapshot.forEach((child) => {
-                        posts.push(child.val());
-                    });
-                    
-                    // Sort by timestamp (newest first)
-                    posts.sort((a, b) => b.timestamp - a.timestamp);
-                    
-                    // Update post count
-                    document.getElementById('profilePosts').textContent = posts.length;
-                    
-                    posts.forEach(async post => {
-                        const postElement = await createPostElement(post);
-                        profilePostsContainer.appendChild(postElement);
-                    });
-                });
-                profilePostsListenerAttached = true;
-            }
-        }
-
-        async function createPostElement(post) {
-            const postElement = document.createElement('div');
-            postElement.className = 'post-card';
-            postElement.style.position = 'relative';
-            
-            const time = new Date(post.timestamp).toLocaleString();
-            
-            const fontStyle = post.fontSize === 'large' ? 'font-size: 20px;' : '';
-            
-            let mediaHTML = '';
-            if (post.mediaURL) {
-                if (post.mediaType === 'image') {
-                    mediaHTML = `<img src="${post.mediaURL}" style="max-width:100%; border-radius:var(--radius); margin-top:15px; box-shadow: var(--shadow);">`;
-                } else {
-                    mediaHTML = `<video src="${post.mediaURL}" controls style="max-width:100%; border-radius:var(--radius); margin-top:15px; box-shadow: var(--shadow);"></video>`;
-                }
-            }
-            
-            // Fetch like status before rendering
-            let userLiked = false;
-            await new Promise(resolve => {
-                db.ref(`postLikes/${currentUser.uid}/${post.id}`).once('value').then(snap => {
-                    userLiked = snap.exists();
-                    resolve();
-                });
-            });
-            
-            postElement.innerHTML = `
-                <div class="post-header">
-                    <div class="avatar-container">
-                        <div class="post-avatar">${post.avatar}</div>
-                    </div>
-                    <div class="post-user-info">
-                        <div class="post-username">${post.fullName}</div>
-                        <div class="post-time">${time}</div>
-                    </div>
-                </div>
-                <div class="post-content" style="${fontStyle}">
-                    <p>${post.content}</p>
-                    ${mediaHTML}
-                </div>
-                <div class="post-actions">
-                    <div class="post-action ${userLiked ? 'active' : ''}" onclick="toggleLikePost('${post.id}')">
-                        <i class="fas fa-heart"></i>
-                        <span>${post.likes || 0}</span>
-                    </div>
-                    <div class="post-action" onclick="toggleComments('${post.id}')">
-                        <i class="fas fa-comment"></i>
-                        <span>${post.comments || 0}</span>
-                    </div>
-                    <div class="post-action" onclick="showShareMenu('${post.id}')">
-                        <i class="fas fa-share"></i>
-                        <span>${post.shares || 0}</span>
-                    </div>
-                    ${post.userId === currentUser.uid ? `
-                    <div class="post-action" onclick="deletePost('${post.id}')" style="margin-left: auto; color: var(--danger);">
-                        <i class="fas fa-trash"></i>
-                        <span>Delete</span>
-                    </div>
-                    ` : ''}
-                </div>
-                <div class="comments-section" id="comments-section-${post.id}" style="display: none;">
-                    <div class="comment-input-container">
-                        <input type="text" class="comment-input" placeholder="Write a comment..." id="comment-input-${post.id}">
-                        <button class="add-comment-btn" onclick="addComment('${post.id}')">Comment</button>
-                    </div>
-                    <div id="comments-${post.id}"></div>
-                </div>
-            `;
-            
-            // Load comments
-            loadComments(post.id);
-            
-            return postElement;
-        }
-
-        function toggleComments(postId) {
-            const section = document.getElementById(`comments-section-${postId}`);
-            if (section.style.display === 'none' || section.style.display === '') {
-                section.style.display = 'block';
-                loadComments(postId); // Ensure comments are loaded
-            } else {
-                section.style.display = 'none';
-            }
-        }
-
-        function showShareMenu(postId) {
-            currentPostId = postId;
-            const menu = document.getElementById('shareMenu');
-            menu.style.display = 'block';
-            setTimeout(() => menu.classList.add('show'), 10);
-        }
-
-        function closeShareMenu() {
-            const menu = document.getElementById('shareMenu');
-            menu.classList.remove('show');
-            setTimeout(() => {
-                menu.style.display = 'none';
-                currentPostId = null;
-            }, 300);
-        }
-
-        function copyPostLink(postId) {
-            const currentUrl = window.location.href;
-            const postLink = `${currentUrl}#post-${postId}`;
-            navigator.clipboard.writeText(postLink).then(() => {
-                alert('Post link copied to clipboard!');
-                closeShareMenu();
-            }).catch(() => {
-                prompt('Copy this link:', postLink);
-                closeShareMenu();
-            });
-        }
-
-        function savePost(postId) {
-            db.ref(`savedPosts/${currentUser.uid}/${postId}`).set(true).then(() => {
-                alert('Post saved to your collection!');
-                closeShareMenu();
-            });
-        }
-
-        function shareToWhatsApp(postId) {
-            db.ref(`posts/${postId}`).once('value').then(snap => {
-                const post = snap.val();
-                const message = `Check out this post: "${post.content}" by ${post.fullName}`;
-                openWhatsApp(currentUser.phone, message);
-                closeShareMenu();
-            });
-        }
-
-        function toggleLikePost(postId) {
-            db.ref(`postLikes/${currentUser.uid}/${postId}`).once('value').then((snap) => {
-                db.ref(`posts/${postId}/likes`).transaction(likes => {
-                    if (snap.exists()) {
-                        return (likes || 0) - 1;
-                    } else {
-                        return (likes || 0) + 1;
-                    }
-                });
-                if (snap.exists()) {
-                    db.ref(`postLikes/${currentUser.uid}/${postId}`).remove();
-                } else {
-                    db.ref(`postLikes/${currentUser.uid}/${postId}`).set(true);
-                }
-            });
-        }
-
-        function addComment(postId) {
-            const input = document.getElementById(`comment-input-${postId}`);
-            const content = input.value.trim();
-            if (!content) return;
-            
-            const commentId = db.ref(`comments/${postId}`).push().key;
-            db.ref(`comments/${postId}/${commentId}`).set({
-                id: commentId,
-                postId,
-                userId: currentUser.uid,
-                username: currentUser.username,
-                fullName: currentUser.fullName,
-                avatar: currentUser.avatar,
-                content,
-                timestamp: firebase.database.ServerValue.TIMESTAMP,
-                likes: 0,
-                replies: 0
-            }).then(() => {
-                db.ref(`posts/${postId}/comments`).transaction(comments => (comments || 0) + 1);
-                input.value = '';
-                // Update comment count in post actions
-                const commentCountSpan = document.querySelector(`.post-action[onclick="toggleComments('${postId}')"] span`);
-                if (commentCountSpan) {
-                    const currentCount = parseInt(commentCountSpan.textContent) || 0;
-                    commentCountSpan.textContent = currentCount + 1;
-                }
-            });
-        }
-
-        function loadComments(postId) {
-            const container = document.getElementById(`comments-${postId}`);
-            if (!container) return;
-            
-            if (!attachedPostComments.has(postId)) {
-                db.ref(`comments/${postId}`).orderByChild('timestamp').limitToLast(50).on('value', (snap) => {
-                    container.innerHTML = '';
-                    let commentCount = 0;
-                    snap.forEach((child) => {
-                        const comment = child.val();
-                        const commentEl = createCommentElement(comment, postId, child.key);
-                        container.appendChild(commentEl);
-                        commentCount++;
-                    });
-                    // Update comment count if visible
-                    const commentCountSpan = document.querySelector(`.post-action[onclick="toggleComments('${postId}')"] span`);
-                    if (commentCountSpan) commentCountSpan.textContent = commentCount;
-                });
-                attachedPostComments.add(postId);
-            }
-        }
-
-        function createCommentElement(comment, postId, commentId) {
-            const commentEl = document.createElement('div');
-            commentEl.className = 'comment-item';
-            const time = new Date(comment.timestamp).toLocaleString();
-            
-            commentEl.innerHTML = `
-                <div class="comment-header">
-                    <div class="comment-avatar">${comment.avatar}</div>
-                    <div class="comment-author">${comment.fullName}</div>
-                    <div class="comment-time">${time}</div>
-                </div>
-                <div class="comment-content">${comment.content}</div>
-                <div class="comment-actions">
-                    <span class="comment-action" onclick="toggleLikeComment('${postId}', '${commentId}')">
-                        <i class="fas fa-heart"></i> ${comment.likes || 0}
-                    </span>
-                    <span class="comment-action" onclick="toggleReply('${postId}', '${commentId}')">
-                        <i class="fas fa-reply"></i> Reply (${comment.replies || 0})
-                    </span>
-                    ${comment.userId === currentUser.uid ? `
-                    <span class="comment-action" style="margin-left: auto; color: var(--danger);" onclick="deleteComment('${postId}', '${commentId}')">
-                        <i class="fas fa-trash"></i> Delete
-                    </span>
-                    ` : ''}
-                </div>
-                <div class="replies-container" id="replies-${commentId}"></div>
-                <div class="reply-input-container" id="reply-input-${commentId}" style="display: none; margin-top: 10px;">
-                    <input type="text" class="reply-input" placeholder="Write a reply..." id="reply-input-text-${commentId}">
-                    <button class="reply-btn" onclick="addReply('${postId}', '${commentId}')">Reply</button>
-                </div>
-            `;
-            
-            // Load replies
-            loadReplies(postId, commentId);
-            
-            return commentEl;
-        }
-
-        function toggleLikeComment(postId, commentId) {
-            db.ref(`commentLikes/${currentUser.uid}/${postId}/${commentId}`).once('value').then((snap) => {
-                const likeSpan = document.querySelector(`#reply-input-${commentId} ~ .comment-actions .comment-action:first-child`) || document.querySelector(`.comment-item:has(#reply-input-${commentId}) .comment-action:first-child`);
-                if (snap.exists()) {
-                    db.ref(`commentLikes/${currentUser.uid}/${postId}/${commentId}`).remove();
-                    db.ref(`comments/${postId}/${commentId}/likes`).transaction(likes => (likes || 0) - 1);
-                    if (likeSpan) likeSpan.classList.remove('active');
-                } else {
-                    db.ref(`commentLikes/${currentUser.uid}/${postId}/${commentId}`).set(true);
-                    db.ref(`comments/${postId}/${commentId}/likes`).transaction(likes => (likes || 0) + 1);
-                    if (likeSpan) likeSpan.classList.add('active');
-                }
-            });
-        }
-
-        function toggleReply(postId, commentId) {
-            const container = document.getElementById(`reply-input-${commentId}`);
-            container.style.display = container.style.display === 'none' ? 'flex' : 'none';
-        }
-
-        function addReply(postId, commentId) {
-            const input = document.getElementById(`reply-input-text-${commentId}`);
-            const content = input.value.trim();
-            if (!content) return;
-            
-            const replyId = db.ref(`replies/${postId}/${commentId}`).push().key;
-            db.ref(`replies/${postId}/${commentId}/${replyId}`).set({
-                id: replyId,
-                postId,
-                commentId,
-                userId: currentUser.uid,
-                username: currentUser.username,
-                fullName: currentUser.fullName,
-                avatar: currentUser.avatar,
-                content,
-                timestamp: firebase.database.ServerValue.TIMESTAMP
-            }).then(() => {
-                db.ref(`comments/${postId}/${commentId}/replies`).transaction(replies => (replies || 0) + 1);
-                input.value = '';
-                document.getElementById(`reply-input-${commentId}`).style.display = 'none';
-                // Update reply count
-                const replyCountSpan = document.querySelector(`.comment-action[onclick="toggleReply('${postId}', '${commentId}')"]`);
-                if (replyCountSpan) {
-                    const currentCount = parseInt(replyCountSpan.textContent.match(/\((\d+)\)/)?.[1] || 0) + 1;
-                    replyCountSpan.innerHTML = `<i class="fas fa-reply"></i> Reply (${currentCount})`;
-                }
-            });
-        }
-
-        function loadReplies(postId, commentId) {
-            const container = document.getElementById(`replies-${commentId}`);
-            if (!container) return;
-            
-            const replyKey = `${postId}_${commentId}`;
-            if (!attachedReplies.has(replyKey)) {
-                db.ref(`replies/${postId}/${commentId}`).orderByChild('timestamp').on('value', (snap) => {
-                    container.innerHTML = '';
-                    snap.forEach((child) => {
-                        const reply = child.val();
-                        const replyEl = document.createElement('div');
-                        replyEl.className = 'reply-item';
-                        const time = new Date(reply.timestamp).toLocaleString();
-                        replyEl.innerHTML = `
-                            <strong>${reply.fullName}</strong> <small style="color: var(--text-secondary);">${time}</small><br>
-                            ${reply.content}
-                            ${reply.userId === currentUser.uid ? ` <button onclick="deleteReply('${postId}', '${commentId}', '${child.key}')" style="background: none; border: none; color: var(--danger); cursor: pointer; font-size: 12px; float: right;"><i class="fas fa-trash"></i></button>` : ''}
-                        `;
-                        container.appendChild(replyEl);
-                    });
-                });
-                attachedReplies.add(replyKey);
-            }
-        }
-
-        function deleteComment(postId, commentId) {
-            if (confirm('Are you sure you want to delete this comment?')) {
-                db.ref(`comments/${postId}/${commentId}`).remove().then(() => {
-                    db.ref(`posts/${postId}/comments`).transaction(comments => (comments || 0) - 1);
-                });
-            }
-        }
-
-        function deleteReply(postId, commentId, replyId) {
-            if (confirm('Are you sure you want to delete this reply?')) {
-                db.ref(`replies/${postId}/${commentId}/${replyId}`).remove().then(() => {
-                    db.ref(`comments/${postId}/${commentId}/replies`).transaction(replies => (replies || 0) - 1);
-                });
-            }
-        }
-
-        function sharePost(postId) {
-            db.ref(`posts/${postId}`).once('value').then(snap => {
-                const post = snap.val();
-                const shareContent = `Check out this post: "${post.content}" shared by ${post.fullName}`;
-                const shareId = db.ref('posts').push().key;
-                db.ref(`posts/${shareId}`).set({
-                    id: shareId,
-                    userId: currentUser.uid,
-                    username: currentUser.username,
-                    fullName: currentUser.fullName,
-                    avatar: currentUser.avatar,
-                    content: shareContent,
-                    timestamp: firebase.database.ServerValue.TIMESTAMP,
-                    likes: 0,
-                    comments: 0,
-                    shares: 1,
-                    originalPostId: postId
-                }).then(() => {
-                    db.ref(`posts/${postId}/shares`).transaction(shares => (shares || 0) + 1);
-                    alert('Post shared successfully!');
-                });
-            });
-        }
-
-        function deletePost(postId) {
-            if (confirm('Are you sure you want to delete this post?')) {
-                db.ref('posts/' + postId).remove()
-                    .then(() => {
-                        alert('Post deleted successfully!');
-                    })
-                    .catch((error) => {
-                        alert('Error deleting post: ' + error.message);
-                    });
-            }
-        }
-
-        // Friends Management
-        function loadFriends() {
-            const friendsList = document.getElementById('friendsList');
-            friendsList.innerHTML = '<div class="loading">Loading friends...</div>';
-            
-            if (!friendsListenerAttached) {
-                db.ref(`friends/${currentUser.uid}`).on('value', (snap) => {
-                    friendsList.innerHTML = '';
-                    
-                    if (!snap.exists()) {
-                        friendsList.innerHTML = `
-                            <div class="no-contacts">
-                                <i class="fas fa-user-friends" style="font-size: 48px; color: var(--text-secondary); margin-bottom: 10px;"></i>
-                                <p>You don't have any friends yet. Search for people to connect with!</p>
-                            </div>
-                        `;
-                        document.getElementById('profileFriends').textContent = 0;
-                        return;
-                    }
-                    
-                    let friendCount = 0;
-                    snap.forEach((child) => {
-                        const friendUid = child.key;
-                        const user = users[friendUid];
-                        if (user) {
-                            const friendElement = createFriendElement(user, friendUid);
-                            friendsList.appendChild(friendElement);
-                            friendCount++;
-                        }
-                    });
-                    document.getElementById('profileFriends').textContent = friendCount;
-                });
-                friendsListenerAttached = true;
-            }
-        }
-
-        function createFriendElement(user, uid) {
-            const friendCard = document.createElement('div');
-            friendCard.className = 'friend-card shadow-hover';
-            friendCard.innerHTML = `
-                <div class="friend-avatar">${user.avatar}</div>
-                <div class="friend-name">${user.fullName}</div>
-                <div class="friend-username">@${user.username}</div>
-                <div class="friend-actions">
-                    <button class="btn btn-sm btn-success" onclick="openChatWith('${uid}')">Message</button>
-                    <button class="btn btn-sm btn-danger" onclick="unfriend('${uid}')">Unfriend</button>
-                    <button class="btn btn-sm btn-warning" onclick="toggleBlock('${uid}')">Block/Unblock</button>
-                </div>
-            `;
-            return friendCard;
-        }
-
-        function unfriend(uid) {
-            if (confirm('Are you sure you want to unfriend this user?')) {
-                db.ref(`friends/${currentUser.uid}/${uid}`).remove();
-                db.ref(`friends/${uid}/${currentUser.uid}`).remove();
-            }
-        }
-
-        function loadFriendRequests() {
-            const friendRequestsList = document.getElementById('friendRequestsList');
-            friendRequestsList.innerHTML = '<div class="loading">Loading friend requests...</div>';
-            
-            if (!friendRequestsListenerAttached) {
-                db.ref(`friendRequests/${currentUser.uid}`).on('value', (snap) => {
-                    friendRequestsList.innerHTML = '';
-                    
-                    if (!snap.exists()) {
-                        friendRequestsList.innerHTML = `
-                            <div class="no-contacts">
-                                <p>No pending friend requests.</p>
-                            </div>
-                        `;
-                        return;
-                    }
-                    
-                    snap.forEach((child) => {
-                        const senderUid = child.key;
-                        const request = child.val();
-                        if (request.status === 'pending') {
-                            const user = users[senderUid];
-                            if (user) {
-                                const requestElement = document.createElement('div');
-                                requestElement.className = 'friend-card shadow-hover';
-                                requestElement.innerHTML = `
-                                    <div class="friend-avatar">${user.avatar}</div>
-                                    <div class="friend-name">${user.fullName}</div>
-                                    <div class="friend-username">@${user.username}</div>
-                                    <div class="friend-actions">
-                                        <button class="btn btn-sm btn-success" onclick="acceptFriend('${senderUid}')">Accept</button>
-                                        <button class="btn btn-sm btn-danger" onclick="declineFriend('${senderUid}')">Decline</button>
-                                    </div>
-                                `;
-                                friendRequestsList.appendChild(requestElement);
-                            }
-                        }
-                    });
-                });
-                friendRequestsListenerAttached = true;
-            }
-        }
-
-        function acceptFriend(senderUid) {
-            db.ref(`friendRequests/${currentUser.uid}/${senderUid}`).update({status: 'accepted'});
-            db.ref(`friends/${currentUser.uid}/${senderUid}`).set(true);
-            db.ref(`friends/${senderUid}/${currentUser.uid}`).set(true);
-            
-            // Send notification to sender
-            db.ref(`notifications/${senderUid}`).push({
-                type: 'friend_accept',
-                from: currentUser.uid,
-                text: `${currentUser.fullName} accepted your friend request`,
-                timestamp: firebase.database.ServerValue.TIMESTAMP,
-                read: false
-            });
-        }
-
-        function declineFriend(senderUid) {
-            db.ref(`friendRequests/${currentUser.uid}/${senderUid}`).remove();
-        }
-
-        function handleFriendSearch() {
-            const searchTerm = document.getElementById('friendSearch').value.trim().toLowerCase();
-            const friendsList = document.getElementById('friendsList');
-            friendsList.innerHTML = '<div class="loading">Searching...</div>';
-            
-            db.ref('users').orderByChild('usernameLower').startAt(searchTerm).endAt(searchTerm + '\uf8ff').once('value')
-                .then((snap) => {
-                    friendsList.innerHTML = '';
-                    
-                    if (!snap.exists()) {
-                        friendsList.innerHTML = `
-                            <div class="no-contacts">
-                                <i class="fas fa-search" style="font-size: 48px; color: var(--text-secondary); margin-bottom: 10px;"></i>
-                                <p>No users found matching "${searchTerm}".</p>
-                            </div>
-                        `;
-                        return;
-                    }
-                    
-                    snap.forEach((child) => {
-                        const uid = child.key;
-                        if (uid === currentUser.uid) return;
-                        const user = child.val();
-                        const friendCard = document.createElement('div');
-                        friendCard.className = 'friend-card shadow-hover';
-                        friendCard.innerHTML = `
-                            <div class="friend-avatar">${user.avatar}</div>
-                            <div class="friend-name">${user.fullName}</div>
-                            <div class="friend-username">@${user.username}</div>
-                            <div class="friend-actions">
-                                <button class="btn btn-sm btn-primary" onclick="sendFriendRequest('${uid}')">Add Friend</button>
-                            </div>
-                        `;
-                        friendsList.appendChild(friendCard);
-                    });
-                })
-                .catch((error) => {
-                    friendsList.innerHTML = '<div class="no-contacts">Error searching users.</div>';
-                });
-        }
-
-        function sendFriendRequest(uid) {
-            db.ref(`friendRequests/${uid}/${currentUser.uid}`).set({
-                timestamp: firebase.database.ServerValue.TIMESTAMP,
-                status: 'pending'
-            });
-            
-            // Send notification to receiver
-            db.ref(`notifications/${uid}`).push({
-                type: 'friend_request',
-                from: currentUser.uid,
-                text: `${currentUser.fullName} sent you a friend request`,
-                timestamp: firebase.database.ServerValue.TIMESTAMP,
-                read: false
-            });
-            
-            alert('Friend request sent!');
-        }
-
-        function handleGlobalSearch() {
-            const searchTerm = document.getElementById('globalSearch').value.trim().toLowerCase();
-            const searchResults = document.getElementById('searchResults');
-            searchResults.innerHTML = '<div class="loading">Searching...</div>';
-            
-            // Search users by username or fullName, and posts by content
-            const userQuery = db.ref('users').orderByChild('usernameLower').startAt(searchTerm).endAt(searchTerm + '\uf8ff');
-            const postQuery = db.ref('posts').orderByChild('content').startAt(searchTerm).endAt(searchTerm + '\uf8ff'); // Note: contentLower not set, use content for simplicity
-            
-            Promise.all([userQuery.once('value'), postQuery.once('value')]).then(([userSnap, postSnap]) => {
-                searchResults.innerHTML = '';
-                let hasResults = false;
-                
-                // Users
-                if (userSnap.exists()) {
-                    hasResults = true;
-                    const usersSection = document.createElement('div');
-                    usersSection.innerHTML = '<h3 style="color: var(--primary); margin-bottom: 20px; font-weight: 600;">People</h3>';
-                    userSnap.forEach((child) => {
-                        const uid = child.key;
-                        if (uid === currentUser.uid) return;
-                        const user = child.val();
-                        const resultCard = document.createElement('div');
-                        resultCard.className = 'friend-card shadow-hover';
-                        resultCard.innerHTML = `
-                            <div class="friend-avatar">${user.avatar}</div>
-                            <div class="friend-name">${user.fullName}</div>
-                            <div class="friend-username">@${user.username}</div>
-                            <div class="friend-actions">
-                                <button class="btn btn-sm btn-primary" onclick="sendFriendRequest('${uid}')">Add Friend</button>
-                            </div>
-                        `;
-                        usersSection.appendChild(resultCard);
-                    });
-                    searchResults.appendChild(usersSection);
-                }
-                
-                // Posts
-                if (postSnap.exists()) {
-                    hasResults = true;
-                    const postsSection = document.createElement('div');
-                    postsSection.innerHTML = '<h3 style="color: var(--primary); margin-bottom: 20px; font-weight: 600;">Posts</h3>';
-                    postSnap.forEach(async (child) => {
-                        const post = child.val();
-                        const postEl = await createPostElement(post);
-                        postEl.style.marginBottom = '0';
-                        postsSection.appendChild(postEl);
-                    });
-                    searchResults.appendChild(postsSection);
-                }
-                
-                if (!hasResults) {
-                    searchResults.innerHTML = `
-                        <div class="no-contacts">
-                            <i class="fas fa-search" style="font-size: 48px; color: var(--text-secondary); margin-bottom: 10px;"></i>
-                            <p>No results found for "${searchTerm}".</p>
-                        </div>
-                    `;
-                }
-            }).catch((error) => {
-                searchResults.innerHTML = '<div class="no-contacts">Error searching.</div>';
-            });
-        }
-
-        // Stories Management
-        function loadStories() {
-            const storiesFeed = document.getElementById('storiesFeed');
-            const storiesList = document.getElementById('storiesList');
-            
-            // Clear existing stories except "Your Story"
-            while (storiesFeed.children.length > 1) storiesFeed.removeChild(storiesFeed.lastChild);
-            while (storiesList.children.length > 1) storiesList.removeChild(storiesList.lastChild);
-            
-            if (!storiesListenerAttached) {
-                db.ref(`friends/${currentUser.uid}`).once('value').then((friendsSnap) => {
-                    const friends = friendsSnap.val() ? Object.keys(friendsSnap.val()) : [];
-                    friends.push(currentUser.uid); // Include own stories
-                    
-                    db.ref('stories').orderByChild('timestamp').on('value', (snap) => {
-                        const storiesMap = {};
-                        
-                        snap.forEach((child) => {
-                            const story = child.val();
-                            if (friends.includes(story.userId) && story.expiresAt > Date.now()) {
-                                if (!storiesMap[story.userId] || story.timestamp > storiesMap[story.userId].timestamp) {
-                                    storiesMap[story.userId] = story;
-                                }
-                            } else if (story.expiresAt <= Date.now()) {
-                                db.ref('stories/' + child.key).remove(); // Clean up expired stories
-                            }
-                        });
-                        
-                        Object.values(storiesMap).sort((a, b) => b.timestamp - a.timestamp).forEach((story) => {
-                            const storyElement = document.createElement('div');
-                            storyElement.className = 'story-item';
-                            storyElement.innerHTML = `
-                                <div class="story-avatar">${story.avatar}</div>
-                                <div class="story-username">${story.username}</div>
-                            `;
-                            storyElement.addEventListener('click', () => openStoryModal(story));
-                            storiesFeed.appendChild(storyElement);
-                            storiesList.appendChild(storyElement.cloneNode(true));
-                        });
-                    });
-                });
-                storiesListenerAttached = true;
-            }
-        }
-
-        function handleCreateStory(e) {
-            e.preventDefault();
-            
-            const text = document.getElementById('storyText').value;
-            
-            if (!text) {
-                alert('Please add text to your story');
-                return;
-            }
-            
-            const now = Date.now();
-            const storyId = db.ref('stories').push().key;
-            const newStory = {
-                id: storyId,
-                userId: currentUser.uid,
-                username: currentUser.username,
-                avatar: currentUser.avatar,
-                text: text,
-                timestamp: now,
-                expiresAt: now + (24 * 60 * 60 * 1000), // 24 hours
-                replies: 0
-            };
-            
-            db.ref('stories/' + storyId).set(newStory)
-                .then(() => {
-                    document.getElementById('storyForm').reset();
-                    alert('Story added successfully!');
-                    loadStories(); // Reload to show immediately
-                })
-                .catch((error) => {
-                    alert('Error creating story: ' + error.message);
-                });
-        }
-
-        // Story Modal Functions
-        function openStoryModal(story) {
-            currentStoryId = story.id;
-            document.getElementById('storyUsername').textContent = story.username + "'s Story";
-            document.getElementById('storyContent').innerHTML = `<p>${story.text}</p>`;
-            if (story.userId === currentUser.uid) {
-                const deleteBtn = document.createElement('button');
-                deleteBtn.className = 'btn btn-danger btn-sm';
-                deleteBtn.innerHTML = '<i class="fas fa-trash"></i> Delete';
-                deleteBtn.onclick = () => deleteStory(story.id);
-                document.querySelector('#storyModal .modal-header').appendChild(deleteBtn);
-            }
-            document.getElementById('storyModal').style.display = 'flex';
-            setTimeout(() => document.querySelector('#storyModal .modal-content').classList.add('show'), 10);
-            loadStoryReplies(story.id);
-        }
-
-        function deleteStory(storyId) {
-            if (confirm('Are you sure you want to delete this story?')) {
-                db.ref('stories/' + storyId).remove()
-                    .then(() => {
-                        alert('Story deleted successfully!');
-                        closeStoryModal();
-                    })
-                    .catch((error) => {
-                        alert('Error deleting story: ' + error.message);
-                    });
-            }
-        }
-
-        function closeStoryModal() {
-            document.querySelector('#storyModal .modal-header button.btn-danger')?.remove(); // Remove delete button if exists
-            document.querySelector('#storyModal .modal-content').classList.remove('show');
-            setTimeout(() => {
-                document.getElementById('storyModal').style.display = 'none';
-                currentStoryId = null;
-            }, 400);
-        }
-
-        function addStoryReply() {
-            const input = document.getElementById('storyReplyInput');
-            const content = input.value.trim();
-            if (!content) return;
-            
-            const replyId = db.ref(`storyReplies/${currentStoryId}`).push().key;
-            db.ref(`storyReplies/${currentStoryId}/${replyId}`).set({
-                id: replyId,
-                storyId: currentStoryId,
-                userId: currentUser.uid,
-                username: currentUser.username,
-                fullName: currentUser.fullName,
-                avatar: currentUser.avatar,
-                content,
-                timestamp: firebase.database.ServerValue.TIMESTAMP
-            }).then(() => {
-                db.ref(`stories/${currentStoryId}/replies`).transaction(replies => (replies || 0) + 1);
-                input.value = '';
-            });
-        }
-
-        function loadStoryReplies(storyId) {
-            const container = document.getElementById('storyReplies');
-            db.ref(`storyReplies/${storyId}`).orderByChild('timestamp').limitToLast(20).on('value', (snap) => {
-                container.innerHTML = '';
-                snap.forEach((child) => {
-                    const reply = child.val();
-                    const replyEl = createReplyElement(reply);
-                    container.appendChild(replyEl);
-                });
-            });
-        }
-
-        function createReplyElement(reply) {
-            const el = document.createElement('div');
-            el.className = 'comment-item';
-            const time = new Date(reply.timestamp).toLocaleString();
-            el.innerHTML = `
-                <div class="comment-header">
-                    <div class="comment-avatar">${reply.avatar}</div>
-                    <div class="comment-author">${reply.fullName}</div>
-                    <div class="comment-time">${time}</div>
-                </div>
-                <div class="comment-content">${reply.content}</div>
-            `;
-            return el;
-        }
-
-        // Notifications Management
-        function loadNotifications() {
-            const notificationsList = document.getElementById('notificationsList');
-            notificationsList.innerHTML = '<div class="loading">Loading notifications...</div>';
-            
-            if (!notificationsListenerAttached) {
-                db.ref(`notifications/${currentUser.uid}`).orderByChild('timestamp').limitToLast(20).on('value', (snap) => {
-                    notificationsList.innerHTML = '';
-                    
-                    const notifs = [];
-                    snap.forEach((child) => {
-                        const notif = child.val();
-                        notif.id = child.key;
-                        notifs.push(notif);
-                    });
-                    
-                    notifs.sort((a, b) => b.timestamp - a.timestamp);
-                    
-                    notifs.forEach((notif) => {
-                        const fromUser = users[notif.from];
-                        if (!fromUser) return;
-                        
-                        const notifElement = document.createElement('div');
-                        notifElement.className = 'notification-item shadow-hover';
-                        notifElement.innerHTML = `
-                            <div class="notification-avatar">${fromUser.avatar}</div>
-                            <div class="notification-content">
-                                <div class="notification-text">${notif.text}</div>
-                                <div class="notification-time">${new Date(notif.timestamp).toLocaleString()}</div>
-                            </div>
-                            <div class="notification-actions">
-                                ${notif.type === 'friend_request' ? `
-                                    <button class="btn btn-success btn-sm" onclick="acceptFriend('${notif.from}')">Accept</button>
-                                    <button class="btn btn-danger btn-sm" onclick="declineFriend('${notif.from}')">Decline</button>
-                                ` : ''}
-                            </div>
-                        `;
-                        notificationsList.appendChild(notifElement);
-                    });
-                    
-                    if (notifs.length === 0) {
-                        notificationsList.innerHTML = `
-                            <div class="no-contacts">
-                                <i class="fas fa-bell" style="font-size: 48px; color: var(--text-secondary); margin-bottom: 10px;"></i>
-                                <p>No notifications yet.</p>
-                            </div>
-                        `;
-                    }
-                });
-                notificationsListenerAttached = true;
-            }
-        }
-
-        // Messaging functions
-        function loadMessagesContacts() {
-            const contactsList = document.getElementById('contactsList');
-            contactsList.innerHTML = '<div class="loading">Loading contacts...</div>';
-            
-            if (!messagesContactsListenerAttached) {
-                db.ref(`friends/${currentUser.uid}`).on('value', (snap) => {
-                    contactsList.innerHTML = '';
-                    
-                    if (!snap.exists()) {
-                        contactsList.innerHTML = `
-                            <div class="no-contacts">
-                                <i class="fas fa-user-friends" style="font-size: 48px; color: var(--text-secondary); margin-bottom: 10px;"></i>
-                                <p>You don't have any friends yet. Add friends to chat!</p>
-                            </div>
-                        `;
-                        return;
-                    }
-                    
-                    snap.forEach((child) => {
-                        const uid = child.key;
-                        const user = users[uid];
-                        if (user) {
-                            const contactElement = document.createElement('div');
-                            contactElement.className = 'contact-item';
-                            contactElement.dataset.uid = uid;
-                            contactElement.innerHTML = `
-                                <div class="avatar-container">
-                                    <div class="contact-avatar">${user.avatar}</div>
-                                    ${isOnline(user.lastSeen) ? '<div class="online-indicator"></div>' : ''}
-                                </div>
-                                <div class="contact-info">
-                                    <div class="contact-name">${user.fullName}</div>
-                                    <div class="contact-last-msg">Start chatting!</div>
-                                </div>
-                            `;
-                            
-                            contactElement.addEventListener('click', () => {
-                                selectChat({uid, ...user});
-                                document.querySelectorAll('.contact-item').forEach(i => i.classList.remove('active'));
-                                contactElement.classList.add('active');
-                            });
-                            
-                            setupLongPress(contactElement, () => deleteChat(uid));
-                            
-                            contactsList.appendChild(contactElement);
-                        }
-                    });
-                });
-                messagesContactsListenerAttached = true;
-            }
-        }
-
-        function setupLongPress(element, callback) {
-            let pressTimer;
-            element.addEventListener('touchstart', () => {
-                pressTimer = setTimeout(callback, 800);
-            });
-            element.addEventListener('touchend', () => clearTimeout(pressTimer));
-            element.addEventListener('touchmove', () => clearTimeout(pressTimer));
-            element.addEventListener('mousedown', () => {
-                pressTimer = setTimeout(callback, 800);
-            });
-            element.addEventListener('mouseup', () => clearTimeout(pressTimer));
-            element.addEventListener('mouseleave', () => clearTimeout(pressTimer));
-        }
-
-        function selectChat(contact) {
-            currentChatUser = contact;
-            
-            const chatWindow = document.getElementById('chatWindow');
-            chatWindow.innerHTML = `
-                <div class="chat-header">
-                    <div class="avatar-container">
-                        <div class="contact-avatar">${contact.avatar}</div>
-                        ${isOnline(contact.lastSeen) ? '<div class="online-indicator"></div>' : ''}
-                    </div>
-                    <div class="chat-header-info">
-                        <h4>${contact.fullName}</h4>
-                        <p>Last seen: ${new Date(contact.lastSeen).toLocaleString()}</p>
-                    </div>
-                    <button class="btn btn-sm btn-warning" onclick="toggleBlock('${contact.uid}')">Block/Unblock</button>
-                </div>
-                <div class="chat-messages" id="chatMessages">
-                    <div class="loading">Loading messages...</div>
-                </div>
-                <div class="chat-input-container">
-                    <input type="text" class="chat-input" placeholder="Type a message..." id="chatInput">
-                    <button class="send-btn" id="sendBtn"><i class="fas fa-paper-plane"></i></button>
-                </div>
-            `;
-            
-            if (currentMessagesRef) {
-                currentMessagesRef.off();
-            }
-            
-            const chatId = getChatId(currentUser.uid, contact.uid);
-            currentMessagesRef = db.ref(`messages/${chatId}`);
-            
-            const chatMessages = document.getElementById('chatMessages');
-            chatMessages.innerHTML = '';
-            
-            currentMessagesRef.orderByChild('timestamp').limitToLast(50).on('child_added', (child) => {
-                const msg = child.val();
-                const isSent = msg.sender === currentUser.uid;
-                const time = new Date(msg.timestamp).toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'});
-                
-                let messageText = msg.text;
-                
-                const messageElement = document.createElement('div');
-                messageElement.className = `message ${isSent ? 'sent' : 'received'}`;
-                messageElement.innerHTML = `
-                    <div class="message-bubble">${messageText}${isSent ? ` <button onclick="deleteMessage('${child.key}', '${chatId}')"><i class="fas fa-trash" style="font-size: 10px; color: #fff; margin-left: 5px;"></i></button>` : ''}</div>
-                    <span class="message-time">${time}</span>
-                `;
-                
-                if (isSent) {
-                    setupLongPress(messageElement.querySelector('.message-bubble'), () => deleteMessage(child.key, chatId));
-                }
-                
-                chatMessages.appendChild(messageElement);
-                setTimeout(() => { chatMessages.scrollTop = chatMessages.scrollHeight; }, 0);
-            });
-            
-            // Setup send listeners
-            const sendBtn = document.getElementById('sendBtn');
-            const chatInput = document.getElementById('chatInput');
-            sendBtn.addEventListener('click', sendMessage);
-            chatInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') sendMessage();
-            });
-            setupChatInput();
-        }
-
-        function sendMessage() {
-            const input = document.getElementById('chatInput');
-            const text = input.value.trim();
-            
-            if (!text) return;
-            
-            currentMessagesRef.push({
-              text: text,
-              sender: currentUser.uid,
-              timestamp: firebase.database.ServerValue.TIMESTAMP
-            });
-            
-            input.value = '';
-        }
-
-        function deleteMessage(messageId, chatId) {
-            if (confirm('Are you sure you want to delete this message?')) {
-                db.ref(`messages/${chatId}/${messageId}`).remove();
-            }
-        }
-
-        function deleteChat(uid) {
-            if (confirm('Are you sure you want to delete this entire chat?')) {
-                const chatId = getChatId(currentUser.uid, uid);
-                db.ref(`messages/${chatId}`).remove();
-                if (currentChatUser && currentChatUser.uid === uid) {
-                    document.getElementById('chatWindow').innerHTML = `
-                        <div class="no-chat-selected">
-                            <i class="fas fa-comment-dots" style="font-size: 48px; color: var(--text-secondary); margin-bottom: 10px;"></i>
-                            <p>Select a friend to start chatting.</p>
-                        </div>
-                    `;
-                    currentChatUser = null;
-                    if (currentMessagesRef) currentMessagesRef.off();
-                }
-            }
-        }
-
-        function toggleBlock(uid) {
-            db.ref(`blocked/${currentUser.uid}/${uid}`).once('value').then(snap => {
-                const isBlocked = snap.val();
-                db.ref(`blocked/${currentUser.uid}/${uid}`).set(!isBlocked);
-                alert(isBlocked ? 'User unblocked!' : 'User blocked!');
-            });
-        }
-
-        function openChatWith(uid) {
-            const contact = {uid, ...users[uid]};
-            toggleMessages(); // Open messages if not open
-            selectChat(contact);
-        }
-
-        function getChatId(uid1, uid2) {
-            return uid1 < uid2 ? `${uid1}_${uid2}` : `${uid2}_${uid1}`;
-        }
-
-        function isOnline(lastSeen) {
-            return Date.now() - lastSeen < 5 * 60 * 1000;
-        }
-
-        // Disable send button if no text
-        function setupChatInput() {
-            const sendBtn = document.getElementById('sendBtn');
-            const chatInput = document.getElementById('chatInput');
-            if (chatInput && sendBtn) {
-                chatInput.addEventListener('input', () => {
-                    sendBtn.disabled = !chatInput.value.trim();
-                });
-                sendBtn.disabled = !chatInput.value.trim();
-            }
         }
 
         // EMS functions
@@ -4817,9 +2201,10 @@ ${branding}${contact}Thank you! - Created by Sample User`;
                 admissionBy: currentUser.username || currentUser.email
             };
             
+            // FIX: Use compat set
             db.ref(`ems/${currentUser.uid}/students/${id}`).set(newStudent);
             
-            const branding = currentUser.schoolName ? `${currentUser.schoolName}\nContact: ${currentUser.schoolPhone || currentUser.phone}\n` : '';
+            const branding = currentUser.schoolName ? `${currentUser.schoolName}\nContact: ${currentUser.schoolPhone}\n` : '';
             const message = `Assalam-o-Alaikum! ${name} has been admitted to Grade ${grade}. Monthly fee: PKR ${fee}. \n${branding}Created by ${currentUser.fullName} (${currentUser.phone})`;
             openWhatsApp(phone, message);
             
@@ -4977,6 +2362,7 @@ ${branding}${contact}Thank you! - Created by Sample User`;
                 collectedBy: currentUser.username || currentUser.email
             };
             
+            // FIX: Use compat set
             db.ref(`ems/${currentUser.uid}/fees/${id}`).set(newFee);
             
             // WhatsApp message content
@@ -5025,8 +2411,8 @@ ${branding}${contact}Thank you! - Created by Sample User`;
                 
                 const totalMonthlyFee = student.fee;
                 const paidFees = Object.values(fees).filter(f => f.studentId === fee.studentId && f.month === fee.month);
-                const totalPaidForMonth = paidFees.reduce((sum, f) => sum + f.amount, 0);
-                const remaining = totalMonthlyFee - totalPaidForMonth;
+                const totalPaid = paidFees.reduce((sum, f) => sum + f.amount, 0);
+                const remaining = totalMonthlyFee - totalPaid;
                 
                 let status = 'Partial';
                 let statusClass = 'fee-partial';
@@ -5061,8 +2447,7 @@ ${branding}${contact}Thank you! - Created by Sample User`;
                 const student = students[fee.studentId];
                 if (!student) return;
                 
-                const paidFees = Object.values(fees).filter(f => f.studentId === fee.studentId && f.month === fee.month);
-                const totalPaid = paidFees.reduce((sum, f) => sum + f.amount, 0);
+                const totalPaid = Object.values(fees).filter(f => f.studentId === fee.studentId && f.month === fee.month).reduce((sum, f) => sum + f.amount, 0);
                 const remaining = student.fee - totalPaid;
                 
                 let status = remaining <= 0 ? 'Paid' : 'Partial';
@@ -5168,7 +2553,7 @@ ${branding}${contact}Thank you! - Created by Sample User`;
 
                 studentsByGrade[grade].forEach(student => {
                     // Determine initial status: checked if present in existing record, or default to present (true)
-                    const isPresent = existingRecord.present.includes(student.id);
+                    const isPresent = existingRecord.present.includes(student.id) || (!existingRecord.present.includes(student.id) && !existingRecord.absent.includes(student.id)); // Default to present if no record exists for this student
                     
                     const div = document.createElement('div');
                     div.style.display = 'flex';
@@ -5211,11 +2596,13 @@ ${branding}${contact}Thank you! - Created by Sample User`;
                     if (action === 'present') {
                         if (!checkbox.checked) {
                             checkbox.checked = true;
+                            // Only call toggleAttendance if status changes to absent to send alert
                             toggleAttendance(studentId, true); 
                         }
                     } else if (action === 'absent') {
                         if (checkbox.checked) {
                             checkbox.checked = false;
+                            // Only call toggleAttendance if status changes to absent to send alert
                             toggleAttendance(studentId, false); 
                         }
                     }
@@ -5254,6 +2641,7 @@ ${branding}${contact}Thank you! - Created by Sample User`;
                 markedBy: currentUser.username || currentUser.email
             };
             
+            // FIX: Use compat set
             db.ref(`ems/${currentUser.uid}/attendance/${date}`).set(newAttendance);
             
             alert('Attendance saved successfully! Absent student alerts were sent via WhatsApp upon marking.');
@@ -5335,6 +2723,40 @@ ${branding}${contact}Thank you! - Created by Sample User`;
             });
         }
 
+        // Update dashboard stats
+        function updateDashboard() {
+            if (!validateUserSession()) return;
+            
+            // Total Students
+            document.getElementById('totalStudents').textContent = Object.keys(students).length;
+            
+            // Fees Collected This Month
+            const currentMonth = new Date().toISOString().slice(0, 7);
+            const monthlyFees = Object.values(fees).filter(fee => fee.month === currentMonth);
+            const totalCollected = monthlyFees.reduce((sum, fee) => sum + fee.amount, 0);
+            document.getElementById('feesCollected').textContent = totalCollected;
+            
+            // Pending Fees
+            const pending = Object.values(students).reduce((sum, student) => {
+                const studentFees = Object.values(fees).filter(f => f.studentId === student.id && f.month === currentMonth);
+                const paid = studentFees.reduce((s, f) => s + f.amount, 0);
+                // Only consider it pending if it's not fully paid (i.e., remaining > 0)
+                const remaining = student.fee - paid;
+                return sum + (remaining > 0 ? remaining : 0);
+            }, 0);
+            document.getElementById('pendingFees').textContent = pending;
+            
+            // Today's Attendance
+            const today = new Date().toISOString().split('T')[0];
+            const todayRecord = attendance[today];
+            if (todayRecord && Object.keys(students).length > 0) {
+                const percentage = Math.round((todayRecord.present.length / Object.keys(students).length) * 100);
+                document.getElementById('todayAttendance').textContent = percentage + '%';
+            } else {
+                document.getElementById('todayAttendance').textContent = '0%';
+            }
+        }
+
         // WhatsApp Integration
         function openWhatsApp(phone, message) {
             let cleanPhone = phone.replace(/\D/g, '');
@@ -5394,18 +2816,21 @@ ${branding}${contact}Thank you! - Created by Sample User`;
             switch(currentAction) {
                 case 'deleteStudent':
                     if (confirm('Are you sure you want to PERMANENTLY delete this student? Fee and attendance history will remain but be marked as archived.')) {
+                        // FIX: Use compat remove
                         db.ref(`ems/${currentUser.uid}/students/${currentItemId}`).remove();
                         alert('Student deleted successfully');
                     }
                     break;
                 case 'deleteFee':
                     if (confirm('Are you sure you want to PERMANENTLY delete this fee receipt?')) {
+                        // FIX: Use compat remove
                         db.ref(`ems/${currentUser.uid}/fees/${currentItemId}`).remove();
                         alert('Fee record deleted successfully');
                     }
                     break;
                 case 'deleteAttendance':
                     if (confirm('Are you sure you want to PERMANENTLY delete this attendance record?')) {
+                        // FIX: Use compat remove
                         db.ref(`ems/${currentUser.uid}/attendance/${currentItemId}`).remove();
                         alert('Attendance record deleted successfully');
                     }
